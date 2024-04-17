@@ -42,7 +42,7 @@ export class LoginModalComponent implements OnInit {
 
   signUp(): void {
     this.modalService.isLoginModelOpen = false;
-    this.modalService.isLoginModelOpen = true;
+    this.modalService.isRegisterModelOpen = true;
   }
 
   handleSubmit(): void {
