@@ -70,6 +70,6 @@ export class SidebarItemsComponent  {
   constructor (private modalService: ModelService) {}
   openLoginModal(): void {
     this.modalService.isLoginModelOpen = true;
-    console.log("test")
+    console.log("modalService",this.modalService.isLoginModelOpen)
   }
 }

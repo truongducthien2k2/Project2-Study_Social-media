@@ -1,1 +1,26 @@
-<p>login-modal works!</p>
+<Modal [isOpen]="true" [disabled]="loginForm.invalid" title="Login" actionLabel="Sign in"
+       (onClose)="modalService.isLoginModelOpen = false" [footer]="footer"
+       (formSubmitted)="handleSubmit()">
+
+    <form [formGroup]="loginForm">
+        <div class="flex flex-col gap-4">
+            <div class="form-wrapper">
+                   <input type="text" placeholder="Email" formControlName="email" [ngClass]="getInputClasses('email')"/> 
+            </div>
+
+        </div>
+        
+    </form>
+
+</Modal>
+
+<ng-template #footer>
+    <div class="text-white text-center mt-4">
+      <p>
+        First time using website?
+        <a (click)="signUp()" class="text-white cursor-pointer">
+          Create an Account
+        </a> 
+      </p>
+    </div>
+  </ng-template>

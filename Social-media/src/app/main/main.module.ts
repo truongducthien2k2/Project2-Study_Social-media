@@ -12,6 +12,7 @@ import { LoginModalComponent } from './shared/auth/login-modal/login-modal.compo
 import { RegisterModalComponent } from './shared/auth/register-modal/register-modal.component';
 import { ModalComponent } from './shared/components/modal.component';
 import { ButtonComponent } from './shared/components/button.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -29,7 +30,8 @@ import { ButtonComponent } from './shared/components/button.component';
   ],
   imports: [
     CommonModule,
-    MainRoutingModule
+    MainRoutingModule,
+    ReactiveFormsModule 
   ]
 })
 export class MainModule { }
