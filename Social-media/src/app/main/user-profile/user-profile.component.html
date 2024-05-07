@@ -37,5 +37,6 @@
 </div>
 
 <app-edit-user
+  [user]="user"
   *ngIf="modalService.isEditModalOpen && user"
 ></app-edit-user>
