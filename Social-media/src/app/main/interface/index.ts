@@ -15,3 +15,22 @@ export interface User {
     createdAt: any;
     bio?: string;
 }
+
+export interface Post {
+    userId: string;
+    body: string;
+    createdAt: any;
+    user?: User;
+    postId?: string;
+    likes?: Array<string>;
+    commentCount?: number;
+}
+
+export interface Comment {
+    id?: string;
+    body: string;
+    postId: string;
+    createdAt?: any;
+    userId: string;
+    user?: User;
+}

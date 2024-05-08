@@ -12,7 +12,7 @@ import { User } from '../../interface';
       <div class="flex flex-col gap-6 mt-4">
         <div class="flex justify-center align-middle" *ngIf="!users.length">
           <!-- Loader here -->
-    
+          <loader></loader>
         </div>
         <ng-container *ngFor="let user of users">
             <a routerLink="/user/{{user.uid}}" *ngIf="user.uid != auth.loggedInUserId">

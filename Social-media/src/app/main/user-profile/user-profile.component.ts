@@ -5,6 +5,7 @@ import { UserService } from '../shared/services/user.service';
 import { User } from '../interface';
 import { Subscription } from 'rxjs';
 import { ModelService } from '../shared/services/model.service';
+import { ConfigService } from '../shared/services/config.service';
 //import { ConfigService } from '../shared/services/config.service';
 
 @Component({
@@ -23,7 +24,9 @@ export class UserProfileComponent implements OnInit {
 
   private subscription!: Subscription;
 
-  constructor(private activatedRoute: ActivatedRoute, private userService: UserService,public auth: AuthService,
+  constructor(private activatedRoute: ActivatedRoute, private userService: UserService,
+  private config: ConfigService,
+  public auth: AuthService,
   public modalService: ModelService) { }
 
   ngOnInit(): void{
@@ -45,7 +48,7 @@ export class UserProfileComponent implements OnInit {
     this.subscription = this.userService.getAllUsers().subscribe(_user => {
       console.log(_user)
       this.user = _user.find(u => u.uid === this.currentUserId) as User;
-      
+      this.config.updateHeaderSettings(this.user.displayName, true);
     })
   }
   getFollowing(): void {

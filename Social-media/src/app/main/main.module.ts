@@ -15,7 +15,12 @@ import { ButtonComponent } from './shared/components/button.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { EditUserComponent } from './edit-user/edit-user.component';
-
+import { HomeComponent } from './home/home.component';
+import { FormComponent } from './components/form.component';
+import { PostsComponent } from './components/posts/posts.component';
+import { FormsModule } from '@angular/forms';
+import { PostItemsComponent } from './components/posts/post-items.component';
+import { LoaderComponent } from './shared/components/loader.component';
 
 @NgModule({
   declarations: [
@@ -31,11 +36,17 @@ import { EditUserComponent } from './edit-user/edit-user.component';
     ButtonComponent,
     UserProfileComponent,
     EditUserComponent,
+    HomeComponent,
+    FormComponent,
+    PostsComponent,
+    PostItemsComponent,
+    LoaderComponent,
   ],
   imports: [
     CommonModule,
     MainRoutingModule,
-    ReactiveFormsModule 
+    ReactiveFormsModule,
+    FormsModule, 
   ]
 })
 export class MainModule { }
