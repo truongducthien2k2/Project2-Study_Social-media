@@ -97,4 +97,28 @@ export class PostsService {
       })
     )
   }
+
+  toggleLike(postId: string, userId: string): Observable<void> {
+    const postRef = this.afs.collection('posts').doc(postId);
+    return new Observable<void>(observer => {
+      this.afs.firestore.runTransaction(transaction => {
+        return transaction.get(postRef.ref).then(postDoc => {
+          if (postDoc.exists) {
+            const post = postDoc.data() as Post;
+            const likes = post.likes || [];
+            if (likes.includes(userId)) {
+              const index = likes.indexOf(userId);
+              likes.splice(index, 1);
+            } else {
+              likes.push(userId);
+            }
+            transaction.update(postRef.ref, { likes })
+            observer.next()
+          } else {
+            observer.error('Post not found')
+          }
+        })
+      })
+    })
+  }
 }

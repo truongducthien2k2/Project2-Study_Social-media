@@ -21,6 +21,9 @@ import { PostsComponent } from './components/posts/posts.component';
 import { FormsModule } from '@angular/forms';
 import { PostItemsComponent } from './components/posts/post-items.component';
 import { LoaderComponent } from './shared/components/loader.component';
+import { DateAgoPipe } from './shared/pipes/date-ago.pipe';
+import { CommentsComponent } from './components/comments/comments.component';
+import { PostComponent } from './post/post.component';
 
 @NgModule({
   declarations: [
@@ -41,6 +44,9 @@ import { LoaderComponent } from './shared/components/loader.component';
     PostsComponent,
     PostItemsComponent,
     LoaderComponent,
+    DateAgoPipe,
+    CommentsComponent,
+    PostComponent
   ],
   imports: [
     CommonModule,

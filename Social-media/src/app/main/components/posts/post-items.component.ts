@@ -19,8 +19,30 @@ import { PostsService } from '../../shared/service/posts.service';
               @{{post.user?.username}}
             </span>
             <span class="text-neutral-500 text-sm">
-              {{post.createdAt?.toDate()}}
+              {{post.createdAt?.toDate() | dateAgo}}
             </span>
+          </div>
+          <div class="text-white mt-1">
+            {{post.body}}
+          </div>
+          <div class="flex flex-row items-center mt-3 gap-10">
+            <div class="flex flex-row items-center text-neutral-500 gap-2 cursor-pointer transition hover:text-sky-500">
+              <span class="material-icons">
+                mode_comment
+              </span>
+              <p>
+                {{post.commentCount}}
+              </p>
+            </div>
+            <div (click)="toggleLike($event)" class="flex flex-row items-center text-neutral-500 gap-2 cursor-pointer transition hover:text-red-500">
+              <span class="material-icons">
+                {{post.likes?.length && (post.likes?.includes(this.auth.loggedInUserId)) ? 'favorite' : 'favorite_border'}}
+              </span>
+              <p>
+                {{post.likes?.length ?? '0'}}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -35,6 +57,13 @@ export class PostItemsComponent {
 
   goToUser(id: string | undefined): void {
     this.router.navigate(['user', id])
+  }
+
+  toggleLike(event: Event): void {
+    event.stopPropagation();
+    if (this.post.postId) {
+      this.postService.toggleLike(this.post.postId, this.auth.loggedInUserId).subscribe()
+    }
   }
 
   goToPost(id: string | undefined): void {
