@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { PostsService } from '../shared/service/posts.service';
+import { PostsService } from '../shared/services/posts.service';
 import { ActivatedRoute } from '@angular/router';
 import { ConfigService } from '../shared/services/config.service';
 

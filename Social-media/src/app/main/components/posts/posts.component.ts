@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Post } from '../../interface';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { PostsService } from '../../shared/service/posts.service';
+import { PostsService } from '../../shared/services/posts.service';
 
 @Component({
   selector: 'app-posts',

@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { Post } from '../../interface';
 import { AuthService } from '../../shared/services/auth.service';
 import { Router } from '@angular/router';
-import { PostsService } from '../../shared/service/posts.service';
+import { PostsService } from '../../shared/services/posts.service';
 
 @Component({
   selector: 'app-post-items',

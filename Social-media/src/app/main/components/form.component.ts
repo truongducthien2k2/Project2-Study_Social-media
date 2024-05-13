@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AuthService } from '../shared/services/auth.service';
 import { ModelService } from '../shared/services/model.service';
-import { PostsService } from '../shared/service/posts.service';
+import { PostsService } from '../shared/services/posts.service';
 import { Comment, Post } from '../interface';
 import { FormsModule } from '@angular/forms';
 
