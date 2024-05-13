@@ -4,7 +4,8 @@
       <app-slidebar></app-slidebar>             
       <div class="col-span-3 lg:col-span-2 border-x-[1px] border-neutral-800">
         <!-- Header -->
-        <app-header title="Home1"> </app-header>
+        <app-header    [title]="config.headerTitle"
+                       [showBackArrow]="config.showBackArrow"> </app-header>
         <router-outlet></router-outlet>
       </div>
       <!-- Follow Bar -->

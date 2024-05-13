@@ -5,8 +5,8 @@ import { Injectable } from '@angular/core';
 })
 export class ConfigService {
 
-  private _headerTitle: string = "";
-  private _showBackArrow: boolean = false;
+   _headerTitle: string = "";
+   _showBackArrow: boolean = false;
 
   constructor() { }
 
@@ -15,10 +15,13 @@ export class ConfigService {
   }
 
   set headerTitle(value: string) {
+    
     this._headerTitle = value;
+   
   }
 
   get showBackArrow(): boolean {
+    
     return this._showBackArrow;
   }
 
@@ -29,6 +32,7 @@ export class ConfigService {
   updateHeaderSettings(title: string, showBackArrow: boolean = false) {
     setTimeout(() => {
       this._headerTitle = title;
+      console.log(this._headerTitle)  
       this._showBackArrow = showBackArrow;
     }, 0);
   }

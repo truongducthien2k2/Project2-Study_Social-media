@@ -44,8 +44,6 @@ export class EditUserComponent implements OnInit {
       'disabled:cursor-not-allowed': true
     }
   }
-
-
   submit() {
     const data = this.editProfile.value;
     this.userService.editUserProfile(this.user.uid, data).then(() => {

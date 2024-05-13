@@ -48,7 +48,7 @@ export class UserProfileComponent implements OnInit {
     this.subscription = this.userService.getAllUsers().subscribe(_user => {
       console.log(_user)
       this.user = _user.find(u => u.uid === this.currentUserId) as User;
-      this.config.updateHeaderSettings(this.user.displayName, true);
+      this.config.updateHeaderSettings(this.user.displayName, true  );
     })
   }
   getFollowing(): void {
