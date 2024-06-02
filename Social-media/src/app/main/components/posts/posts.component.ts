@@ -14,8 +14,7 @@ import { PostsService } from '../../shared/services/posts.service';
       <app-post-items *ngIf="post" [post]="post"> </app-post-items>
     </ng-container>
   `,
-  styles: [
-  ]
+  styles: [],
 })
 export class PostsComponent implements OnInit, OnDestroy {
   loading: boolean = false;
@@ -23,26 +22,34 @@ export class PostsComponent implements OnInit, OnDestroy {
   subscription!: Subscription;
   userId: string = '';
 
-  constructor(private postService: PostsService, private activatedRoute: ActivatedRoute) { }
+  constructor(
+    private postService: PostsService,
+    private activatedRoute: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
-    this.subscription = this.activatedRoute.paramMap?.subscribe((params: ParamMap) => {
-      this.userId = params.get('id') || '';
-      this.loading = true;
-      this.getPosts();
-    })
+    this.subscription = this.activatedRoute.paramMap?.subscribe(
+      (params: ParamMap) => {
+        this.userId = params.get('id') || '';
+        this.loading = true;
+        this.getPosts();
+      }
+    );
   }
 
   private getPosts(): void {
-    this.subscription = this.postService.getPosts(this.userId).subscribe((posts) => {
-      this.posts = posts;
-      this.loading = false;
-    }, err => {
-      this.loading = false;
-    })
+    this.subscription = this.postService.getPosts(this.userId).subscribe(
+      (posts) => {
+        this.posts = posts;
+        this.loading = false;
+      },
+      (err) => {
+        this.loading = false;
+      }
+    );
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe()
+    this.subscription.unsubscribe();
   }
 }

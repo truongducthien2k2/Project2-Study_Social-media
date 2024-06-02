@@ -14,18 +14,22 @@ export interface User {
     username?: string;
     createdAt: any;
     bio?: string;
+    
 }
 
 export interface Post {
     userId: string;
-    body: string;
+    body: string; 
     createdAt: any;
     user?: User;
     postId?: string;
     likes?: Array<string>;
-    commentCount?: number;
+    commentCount?: number; 
+     documentUrl?: string;
+}8
+export interface Document{
+    
 }
-
 export interface Comment {
     id?: string;
     body: string;
