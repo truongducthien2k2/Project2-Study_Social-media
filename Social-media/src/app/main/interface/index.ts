@@ -16,7 +16,6 @@ export interface User {
     bio?: string;
     
 }
-
 export interface Post {
     userId: string;
     body: string; 
@@ -25,10 +24,7 @@ export interface Post {
     postId?: string;
     likes?: Array<string>;
     commentCount?: number; 
-     documentUrl?: string;
-}8
-export interface Document{
-    
+    documentUrls?: string[];  // Updated to handle multiple document URLs
 }
 export interface Comment {
     id?: string;
