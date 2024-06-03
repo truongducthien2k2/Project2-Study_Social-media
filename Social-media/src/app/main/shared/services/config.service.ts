@@ -32,7 +32,6 @@ export class ConfigService {
   updateHeaderSettings(title: string, showBackArrow: boolean = false) {
     setTimeout(() => {
       this._headerTitle = title;
-      console.log(this._headerTitle)  
       this._showBackArrow = showBackArrow;
     }, 0);
   }

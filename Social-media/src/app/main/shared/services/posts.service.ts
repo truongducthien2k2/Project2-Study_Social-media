@@ -11,8 +11,29 @@ export class PostsService {
 
   constructor(private afs: AngularFirestore) { }
 
-  savePost(data:Post) {
+  savePost(data: Post): Promise<any> {
+    const body = data.body;
+    const segments = body.split(/\s+/);
+    const tags: string[] = [];
+    const bodyWithoutTags: string[] = [];
+
+    segments.forEach((segment) => {
+      if (this.isTag(segment)) {
+        tags.push(segment.substring(1)); 
+      } else {
+        bodyWithoutTags.push(segment);
+      }
+    });
+
+    data.tags = tags; 
+    data.body = bodyWithoutTags.join(' '); 
+
     return this.afs.collection<Post>('posts').add(data);
+  }
+
+
+  private isTag(segment: string): boolean {
+    return segment.startsWith('#');
   }
 
   getPost(id: string) {

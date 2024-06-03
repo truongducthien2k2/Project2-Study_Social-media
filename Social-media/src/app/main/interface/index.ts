@@ -24,7 +24,8 @@ export interface Post {
     postId?: string;
     likes?: Array<string>;
     commentCount?: number; 
-    documentUrls?: string[];  // Updated to handle multiple document URLs
+    documentUrls?: string[];
+    tags?: string[];
 }
 export interface Comment {
     id?: string;

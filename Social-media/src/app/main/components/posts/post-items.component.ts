@@ -11,7 +11,7 @@ import { PostsService } from '../../shared/services/posts.service';
   (click)="goToPost(post.postId)"
   class="border-b-[1px] border-neutral-800 p-5 cursor-pointer hover:bg-neutral-900 transition"
 >
-  <div class="flex flex-row items-start gap-3">
+  <div class="flex flex-row items-start gap-3 " >
     <Avatar></Avatar>
     <div>
       <div class="flex flex-row items-center gap-2">
@@ -31,6 +31,16 @@ import { PostsService } from '../../shared/services/posts.service';
       <div class="text-white mt-1">
         {{ post.body }}
       </div>
+
+      
+<!-- Hiển thị các tag -->
+<div class="text-blue-500 mt-1">
+  <ng-container *ngFor="let tag of post.tags; let last = last">
+    <span class="cursor-pointer hover:underline">#{{ tag }}</span>
+    <span>&nbsp;</span>
+  </ng-container>
+</div>
+
       <!-- Display the documents below the post body -->
       <div class="mt-3">
         <ng-container *ngFor="let url of post.documentUrls">
@@ -106,8 +116,7 @@ export class PostItemsComponent {
   isImage(url: string): boolean {
     try {
       const fileExtension = new URL(url).pathname.split('.').pop()?.toLowerCase();
-      console.log("1", fileExtension);
-      return ['jpeg', 'jpg', 'gif', 'png'].includes(fileExtension || '');
+      return ['jpeg', 'jpg', 'gif', 'png','webp'].includes(fileExtension || '');
     } catch (error) {
       console.error('Invalid URL:', url);
       return false;
@@ -117,7 +126,6 @@ export class PostItemsComponent {
   isPdf(url: string): boolean {
     try {
       const fileExtension = new URL(url).pathname.split('.').pop()?.toLowerCase();
-      console.log("2", fileExtension);
       return ['pdf', 'doc'].includes(fileExtension || '');
     } catch (error) {
       console.error('Invalid URL:', url);
