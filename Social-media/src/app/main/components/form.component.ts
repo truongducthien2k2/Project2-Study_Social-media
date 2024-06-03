@@ -33,11 +33,12 @@ import { forkJoin, Observable } from 'rxjs';
         <hr class="opacity-0 peer-focus:opacity-100 h-[1px] w-full border-neutral-800 transition" />
         <div class="mt-4 flex flex-row justify-end">
           <div style="display: flex; align-items: center;">
-            <button (click)="fileInput.click()" style="margin-right: 10px; background-color: #007bff; color: white; border: none; padding: 5px 10px; cursor: pointer;">Select</button>
-            <span style="color: #555; padding: 10px;">{{ fileNames.length > 0 ? fileNames.join(', ') : 'none' }}</span>
+            <app-button (click)="fileInput.click()" label="Select" ></app-button>
+            <span style="color: #555; padding: 10px;">{{ fileNames.length > 0 ? fileNames.join(', ') : '' }}</span>
+            
             <input #fileInput type="file" (change)="onFilesSelected($event)" style="display: none;" multiple />
           </div>
-          <app-button label="Tweet" [disabled]="isLoading || !(body.length || files.length)" (click)="tweet()"> </app-button>
+          <app-button label="Upload" [disabled]="isLoading || !(body.length || files.length)" (click)="tweet()"> </app-button>
         </div>
       </div>
     </div>

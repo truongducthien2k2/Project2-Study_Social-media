@@ -65,6 +65,16 @@ export class SidebarItemsComponent implements OnInit, OnDestroy {
       lable:'Notifications',
       route: '/notifications',
       icon:'notifications'
+    },
+    {
+      lable:'search',
+      route: '/search',
+      icon:'search'
+    },
+    {
+      lable:'Documents',
+      route: '/notifications',
+      icon: 'description'
     }
   ]
 

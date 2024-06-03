@@ -97,7 +97,29 @@ export class PostsService {
       )
     }
   }
+  getPostsByTags(tags: string[]): Observable<Post[]> {
+    return combineLatest([
+      this.afs.collection<Post>('posts', ref => ref.where('tags', 'array-contains-any', tags)).valueChanges({ idField: 'postId' }),
+      this.afs.collection<User>('users').valueChanges({ idField: 'userId' })
+    ]).pipe(
+      switchMap(([posts, users]) => {
+        const postObservables = posts.map(post => {
+          const user = users.find(u => u.userId === post.userId);
+          const comments$ = this.getCommentsByPostId(post.postId);
 
+          return comments$.pipe(
+            map(comments => {
+              const commentCount = comments.length;
+              return { ...post, user, commentCount };
+            })
+          );
+        });
+        return combineLatest(postObservables).pipe(
+          defaultIfEmpty([] as Post[]) // Return an empty array if there are no posts available
+        );
+      })
+    );
+  }
   saveComment(comment:Comment): Promise<any> {
     const commentCollection = this.afs.collection<Comment>('comments');
     const id = this.afs.createId();

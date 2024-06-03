@@ -4,6 +4,7 @@ import { LayoutComponent } from './layout/layout.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { HomeComponent } from './home/home.component';
 import { PostComponent } from './post/post.component';
+import { SearchComponent } from './components/search/search.component';
 
 const routes: Routes = [
   {
@@ -16,7 +17,10 @@ const routes: Routes = [
       },
       {
         path: 'user/:id', component: UserProfileComponent
-      }
+      },
+      {
+        path: 'search', component: SearchComponent
+      },
     ]
   }
 ];

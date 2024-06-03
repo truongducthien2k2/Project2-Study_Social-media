@@ -1,0 +1,22 @@
+<div class="col-span-3 lg:col-span-2 border-x-[1px] border-neutral-800 h-full">
+    <!-- Header -->
+    <app-header [title]="'Results #' + tag" [showBackArrow]="false"></app-header>
+    
+    <!-- Search Bar -->
+    <div class="p-4">
+        <input
+            type="text"
+            [(ngModel)]="searchQuery"
+            (input)="onSearchChange()"
+            placeholder="Search..."
+            class="w-full p-2 rounded border border-neutral-800 bg-neutral-900 text-black"
+        />
+    </div>
+
+    <!-- Content Area -->
+    <div class="h-full overflow-y-auto">
+        <div *ngFor="let post of filteredPosts">
+            <app-post-items [post]="post"></app-post-items>
+        </div>
+    </div>
+</div>
