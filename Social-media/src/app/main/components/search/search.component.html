@@ -1,6 +1,6 @@
 <div class="col-span-3 lg:col-span-2 border-x-[1px] border-neutral-800 h-full">
     <!-- Header -->
-    <app-header [title]="'Results #' + tag" [showBackArrow]="false"></app-header>
+    <app-header *ngIf="tag" [title]="'Results #' + tag" [showBackArrow]="false"></app-header>
     
     <!-- Search Bar -->
     <div class="p-4">
@@ -8,6 +8,7 @@
             type="text"
             [(ngModel)]="searchQuery"
             (input)="onSearchChange()"
+            (keydown.enter)="onEnterPress()"
             placeholder="Search..."
             class="w-full p-2 rounded border border-neutral-800 bg-neutral-900 text-black"
         />
