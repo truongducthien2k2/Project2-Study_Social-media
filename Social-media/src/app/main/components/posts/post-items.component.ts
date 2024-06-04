@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Post } from '../../interface';
 import { AuthService } from '../../shared/services/auth.service';
 import { Router } from '@angular/router';
@@ -8,11 +8,13 @@ import { PostsService } from '../../shared/services/posts.service';
   selector: 'app-post-items',
   template: `
     <div
-      (click)="goToPost(post.postId)"
+     
       class="border-b-[1px] border-neutral-800 p-5 cursor-pointer hover:bg-neutral-900 transition"
     >
       <div class="flex flex-row items-start gap-3 ">
-        <Avatar [photoURL]="post.user?.photoURL ?? '/assets/images/user.png'"></Avatar>
+        <Avatar
+          [photoURL]="post.user?.photoURL ?? '/assets/images/user.png'"
+        ></Avatar>
         <div>
           <div class="flex flex-row items-center gap-2">
             <p class="text-white font-semibold cursor-pointer hover:underline">
@@ -27,15 +29,25 @@ import { PostsService } from '../../shared/services/posts.service';
             <span class="text-white text-sm ">
               {{ post.createdAt?.toDate() | dateAgo }}
             </span>
+            <ng-container
+              *ngIf="post.user?.uid === auth.loggedInUserId.toString()"
+            >
+              <span class="text-white text-sm " (click)="deletePost(post.postId!)"> Xóa </span>
+              <span class="text-white text-sm "> Chỉnh sửa </span>
+            </ng-container>
           </div>
-          <div class="text-white mt-1">
+          <div class="text-white mt-1" (click)="goToPost(post.postId)">
             {{ post.body }}
           </div>
 
           <!-- Hiển thị các tag -->
           <div class="text-blue-500 mt-1">
             <ng-container *ngFor="let tag of post.tags; let last = last">
-              <span class="cursor-pointer hover:underline" (click)="gotoSearch(tag)">#{{ tag }}</span>
+              <span
+                class="cursor-pointer hover:underline"
+                (click)="gotoSearch(tag)"
+                >#{{ tag }}</span
+              >
               <span>&nbsp;</span>
             </ng-container>
           </div>
@@ -101,14 +113,23 @@ import { PostsService } from '../../shared/services/posts.service';
   `,
   styles: [],
 })
-export class PostItemsComponent {
+export class PostItemsComponent implements OnInit {
   @Input() post!: Post;
-
+  posts: Post[] = [];
   constructor(
     public auth: AuthService,
     private router: Router,
     private postService: PostsService
   ) {}
+  ngOnInit(): void {
+  }
+  deletePost(postId: string): void {
+    this.postService.deletePost(postId)
+      .then(() => {
+        this.posts = this.posts.filter(post => post.postId !== postId);
+      })
+      .catch((error) => console.error('Error deleting post:', error));
+  }
 
   goToUser(id: string | undefined): void {
     this.router.navigate(['user', id]);

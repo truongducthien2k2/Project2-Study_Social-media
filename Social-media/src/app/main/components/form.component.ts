@@ -85,7 +85,6 @@ export class FormComponent  implements OnInit, OnDestroy{
     this.subscriptions.push(
       this.userService.getAllUsers().subscribe(users => {
         this.user = users.find(u => u.uid === this.auth.loggedInUserId.toString()) as User;
-        console.log(this.user);
       })
     );
   }

@@ -5,11 +5,10 @@ import { Observable, combineLatest } from 'rxjs';
 import { defaultIfEmpty, map, switchMap } from 'rxjs/operators';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PostsService {
-
-  constructor(private afs: AngularFirestore) { }
+  constructor(private afs: AngularFirestore) {}
 
   savePost(data: Post): Promise<any> {
     const body = data.body;
@@ -19,18 +18,17 @@ export class PostsService {
 
     segments.forEach((segment) => {
       if (this.isTag(segment)) {
-        tags.push(segment.substring(1)); 
+        tags.push(segment.substring(1));
       } else {
         bodyWithoutTags.push(segment);
       }
     });
 
-    data.tags = tags; 
-    data.body = bodyWithoutTags.join(' '); 
+    data.tags = tags;
+    data.body = bodyWithoutTags.join(' ');
 
     return this.afs.collection<Post>('posts').add(data);
   }
-
 
   private isTag(segment: string): boolean {
     return segment.startsWith('#');
@@ -38,77 +36,91 @@ export class PostsService {
 
   getPost(id: string) {
     return combineLatest([
-      this.afs.collection<Post>('posts').doc(id).valueChanges({ idField: 'postId' }),
+      this.afs
+        .collection<Post>('posts')
+        .doc(id)
+        .valueChanges({ idField: 'postId' }),
       this.afs.collection<User>('users').valueChanges({ idField: 'userId' }),
-      this.getCommentsByPostId(id)
+      this.getCommentsByPostId(id),
     ]).pipe(
       map(([post, users, comments]) => {
-        const user = users.find(u => u.userId === post?.userId)
+        const user = users.find((u) => u.userId === post?.userId);
         const commentCount = comments.length;
-        return { ...post, user, commentCount }
+        return { ...post, user, commentCount };
       })
-    )
+    );
   }
 
   getPosts(id: string = ''): Observable<Post[]> {
     if (id) {
       return combineLatest([
-        this.afs.collection<Post>('posts', ref => ref.where('userId', '==', id)).valueChanges({ idField: 'postId' }),
-        this.afs.collection<User>('users').valueChanges({ idField: 'userId' })
+        this.afs
+          .collection<Post>('posts', (ref) => ref.where('userId', '==', id))
+          .valueChanges({ idField: 'postId' }),
+        this.afs.collection<User>('users').valueChanges({ idField: 'userId' }),
       ]).pipe(
         switchMap(([posts, users]) => {
-          const postObservables = posts.map(post => {
-            const user = users.find(u => u.userId === post.userId)
+          const postObservables = posts.map((post) => {
+            const user = users.find((u) => u.userId === post.userId);
             const comments$ = this.getCommentsByPostId(post.postId);
 
             return comments$.pipe(
-              map(comments => {
+              map((comments) => {
                 const commentCount = comments.length;
-                return { ...post, user, commentCount }
+                return { ...post, user, commentCount };
               })
             );
           });
           return combineLatest(postObservables).pipe(
             defaultIfEmpty() // Return an empty array if there are no posts available
-          )
+          );
         })
-      )
+      );
     } else {
       return combineLatest([
         this.afs.collection<Post>('posts').valueChanges({ idField: 'postId' }),
-        this.afs.collection<User>('users').valueChanges({ idField: 'userId' })
+        this.afs.collection<User>('users').valueChanges({ idField: 'userId' }),
       ]).pipe(
         switchMap(([posts, users]) => {
-          const postObservables = posts.map(post => {
-            const user = users.find(u => u.userId === post.userId)
+          const postObservables = posts.map((post) => {
+            const user = users.find((u) => u.userId === post.userId);
             const comments$ = this.getCommentsByPostId(post.postId);
 
             return comments$.pipe(
-              map(comments => {
+              map((comments) => {
                 const commentCount = comments.length;
-                return { ...post, user, commentCount }
+                return { ...post, user, commentCount };
               })
             );
           });
           return combineLatest(postObservables).pipe(
             defaultIfEmpty() // Return an empty array if there are no posts available
-          )
+          );
         })
-      )
+      );
     }
   }
+
+  deletePost(postID: string): Promise<void> {
+    return this.afs.collection('posts').doc(postID).delete();
+  }
+
   getPostsByTags(tags: string[]): Observable<Post[]> {
     return combineLatest([
-      this.afs.collection<Post>('posts', ref => ref.where('tags', 'array-contains-any', tags)).valueChanges({ idField: 'postId' }),
-      this.afs.collection<User>('users').valueChanges({ idField: 'userId' })
+      this.afs
+        .collection<Post>('posts', (ref) =>
+          ref.where('tags', 'array-contains-any', tags)
+        )
+        .valueChanges({ idField: 'postId' }),
+      this.afs.collection<User>('users').valueChanges({ idField: 'userId' }),
     ]).pipe(
       switchMap(([posts, users]) => {
-        const postObservables = posts.map(post => {
-          const user = users.find(u => u.userId === post.userId);
+        const postObservables = posts.map((post) => {
+          const user = users.find((u) => u.userId === post.userId);
           const comments$ = this.getCommentsByPostId(post.postId);
 
           return comments$.pipe(
-            map(comments => {
+            map((comments) => {
               const commentCount = comments.length;
               return { ...post, user, commentCount };
             })
@@ -120,7 +132,7 @@ export class PostsService {
       })
     );
   }
-  saveComment(comment:Comment): Promise<any> {
+  saveComment(comment: Comment): Promise<any> {
     const commentCollection = this.afs.collection<Comment>('comments');
     const id = this.afs.createId();
     comment.id = id;
@@ -129,23 +141,40 @@ export class PostsService {
 
   getCommentsByPostId(postId: string): Observable<Comment[]> {
     return combineLatest([
-      this.afs.collection<Comment>('comments', ref => ref.where('postId', '==', postId)).valueChanges({ idField: 'commentId' }),
-      this.afs.collection<User>('users').valueChanges({ idField: 'userId' })
+      this.afs
+        .collection<Comment>('comments', (ref) =>
+          ref.where('postId', '==', postId)
+        )
+        .valueChanges({ idField: 'commentId' }),
+      this.afs.collection<User>('users').valueChanges({ idField: 'userId' }),
     ]).pipe(
       map(([comments, users]) => {
-        return comments.map(comment => {
-          const user = users.find(u => u.userId === comment.userId);
-          return { ...comment, user }
-        })
+        return comments.map((comment) => {
+          const user = users.find((u) => u.userId === comment.userId);
+          return { ...comment, user };
+        });
       })
-    )
+    );
   }
 
+  deleteComment(commentId: string): Promise<void> {
+    return this.afs.collection('comments').doc(commentId).delete();
+  }
+
+  editComment(
+    commentId: string,
+    updatedComment: Partial<Comment>
+  ): Promise<void> {
+    return this.afs
+      .collection('comments')
+      .doc(commentId)
+      .update(updatedComment);
+  }
   toggleLike(postId: string, userId: string): Observable<void> {
     const postRef = this.afs.collection('posts').doc(postId);
-    return new Observable<void>(observer => {
-      this.afs.firestore.runTransaction(transaction => {
-        return transaction.get(postRef.ref).then(postDoc => {
+    return new Observable<void>((observer) => {
+      this.afs.firestore.runTransaction((transaction) => {
+        return transaction.get(postRef.ref).then((postDoc) => {
           if (postDoc.exists) {
             const post = postDoc.data() as Post;
             const likes = post.likes || [];
@@ -155,13 +184,13 @@ export class PostsService {
             } else {
               likes.push(userId);
             }
-            transaction.update(postRef.ref, { likes })
-            observer.next()
+            transaction.update(postRef.ref, { likes });
+            observer.next();
           } else {
-            observer.error('Post not found')
+            observer.error('Post not found');
           }
-        })
-      })
-    })
+        });
+      });
+    });
   }
 }
