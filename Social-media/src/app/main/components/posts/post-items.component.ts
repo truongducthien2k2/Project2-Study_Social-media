@@ -12,7 +12,7 @@ import { PostsService } from '../../shared/services/posts.service';
       class="border-b-[1px] border-neutral-800 p-5 cursor-pointer hover:bg-neutral-900 transition"
     >
       <div class="flex flex-row items-start gap-3 ">
-        <Avatar></Avatar>
+        <Avatar [photoURL]="post.user?.photoURL ?? '/assets/images/user.png'"></Avatar>
         <div>
           <div class="flex flex-row items-center gap-2">
             <p class="text-white font-semibold cursor-pointer hover:underline">
@@ -130,6 +130,7 @@ export class PostItemsComponent {
   goToPost(id: string | undefined): void {
     this.router.navigate(['post', id]);
   }
+
   isImage(url: string): boolean {
     try {
       const fileExtension = new URL(url).pathname

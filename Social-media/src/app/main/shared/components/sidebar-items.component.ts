@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs';
   template: `
     <!-- Home/Notifications Button -->
     <div class="h-full rounded-full h-14 w-14 p-4 flex items-center justify-center hover:bg-opacity-10 hover:bg-blue-300 cursor-pointer transition ">
-      <img src="/assets/images/logo.svg" class="h-14 w-14" alt="Logo">
+      <div class="h-14 w-200" alt="Logo"></div>
     </div>
     <div class="flex flex-row items-center h-full" *ngFor="let item of items">
 
@@ -67,7 +67,7 @@ export class SidebarItemsComponent implements OnInit, OnDestroy {
       icon:'notifications'
     },
     {
-      lable:'search',
+      lable:'Search',
       route: '/search',
       icon:'search'
     },

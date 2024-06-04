@@ -19,7 +19,7 @@ import { User } from '../../interface';
 
           <div class="flex flex-row gap-4">
           <!-- Avatar -->
-            <Avatar></Avatar>
+            <Avatar [photoURL]="user.photoURL"></Avatar>
             <div class="flex flex-col">
               <p class="text-white font-semibold text-sm">
                 {{user.displayName}}

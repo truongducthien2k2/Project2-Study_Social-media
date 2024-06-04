@@ -72,4 +72,8 @@ export class SearchComponent implements OnInit {
   gotoSearch1(): void {
     this.router.navigate(['search']);
   }
+  clearTag(): void {
+    this.tag = null;
+    this.fetchPosts();
+  }
 }

@@ -1,18 +1,20 @@
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AuthService } from '../shared/services/auth.service';
 import { ModelService } from '../shared/services/model.service';
 import { PostsService } from '../shared/services/posts.service';
-import { Comment, Post } from '../interface';
+import { Comment, Post, User } from '../interface';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { finalize, switchMap } from 'rxjs/operators';
-import { forkJoin, Observable } from 'rxjs';
+import { forkJoin, Observable, Subscription } from 'rxjs';
+import { ActivatedRoute, ParamMap } from '@angular/router';
+import { UserService } from '../shared/services/user.service';
 
 @Component({
   selector: 'app-form',
   template: `
     <!-- Guest User -->
     <div class="border-b-[1px] border-neutral-800 px-5 py-2">
-      <div class="py-8" *ngIf="!auth.loggedInUserId">
+      <div class="py-8" *ngIf="!auth.loggedInUserId && user">
         <h1 class="text-white text-2xl text-center mb-4 font-bold">Welcome to Twitter</h1>
         <div class="flex flex-row items-center justify-center gap-4">
           <app-button label="Login" (click)="modalService.isLoginModelOpen = true"> </app-button>
@@ -23,7 +25,7 @@ import { forkJoin, Observable } from 'rxjs';
 
     <!-- Logged In User -->
     <div class="flex flex-row gap-4" *ngIf="auth.loggedInUserId">
-      <Avatar [userId]="auth.loggedInUserId"> </Avatar>
+      <Avatar [photoURL]="user.photoURL"> </Avatar>
       <div class="w-full">
         <textarea [disabled]="isLoading"
         [(ngModel)]="body"
@@ -45,7 +47,7 @@ import { forkJoin, Observable } from 'rxjs';
   `,
   styles: []
 })
-export class FormComponent {
+export class FormComponent  implements OnInit, OnDestroy{
   isLoading: boolean = false;
   body: string = '';
   @Input() placeholder: string = '';
@@ -56,13 +58,37 @@ export class FormComponent {
 
   fileNames: string[] = [];
   files: File[] = [];
+  subscription!: Subscription;
+  user!: User;
+  loading: boolean = false;
+  isAdmin: boolean = false;
 
+  private subscriptions: Subscription[] = [];
   constructor(
     public auth: AuthService,
     public modalService: ModelService,
     private postService: PostsService,
-    private storage: AngularFireStorage
-  ) {}
+    private activatedRoute: ActivatedRoute,
+    private storage: AngularFireStorage,
+    private userService: UserService,
+  ) {
+  }
+
+  ngOnInit(): void {
+    this.getCurrentUserProfileInfo();
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
+  }
+  getCurrentUserProfileInfo(): void {
+    this.subscriptions.push(
+      this.userService.getAllUsers().subscribe(users => {
+        this.user = users.find(u => u.uid === this.auth.loggedInUserId.toString()) as User;
+        console.log(this.user);
+      })
+    );
+  }
 
   onFilesSelected(event: any) {
     const selectedFiles: File[] = Array.from(event.target.files);

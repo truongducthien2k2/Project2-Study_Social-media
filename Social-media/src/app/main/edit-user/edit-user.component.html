@@ -1,53 +1,37 @@
-<Modal
-  [isOpen]="true"
-  (formSubmitted)="submit()"
-  [disabled]="editProfile.invalid"
-  actionLabel="Save"
-  title="Edit your profile"
-  (onClose)="modalService.isEditModalOpen = false"
->
+<Modal [isOpen]="true" (formSubmitted)="submit()" [disabled]="editProfile.invalid" actionLabel="Save"
+  title="Edit your profile" (onClose)="modalService.isEditModalOpen = false">
   <form [formGroup]="editProfile">
     <div class="flex flex-col gap-4">
       <div class="form-wrapper">
-        <input
-          type="text"
-          placeholder="Name"
-          formControlName="displayName"
-          [ngClass]="getInputClasses('displayName')"
-        />
-        <ng-container
-          *ngIf="
+        <input type="text" placeholder="Name" formControlName="displayName"
+          [ngClass]="getInputClasses('displayName')" />
+        <ng-container *ngIf="
             editProfile.get('displayName')?.invalid &&
             editProfile.get('displayName')?.touched
-          "
-        >
+          ">
           <span class="text-red-500 text-sm ps-2"> What is your name? </span>
         </ng-container>
       </div>
       <div class="form-wrapper">
-        <input
-          type="text"
-          placeholder="Username"
-          formControlName="username"
-          [ngClass]="getInputClasses('username')"
-        />
-        <ng-container
-          *ngIf="
+        <input type="text" placeholder="Username" formControlName="username" [ngClass]="getInputClasses('username')" />
+        <ng-container *ngIf="
             editProfile.get('username')?.invalid &&
             editProfile.get('username')?.touched
-          "
-        >
+          ">
           <span class="text-red-500 text-sm ps-2">
             What is your username?
           </span>
         </ng-container>
       </div>
       <div class="form-wrapper">
-        <textarea
-          [ngClass]="getInputClasses('bio')"
-          placeholder="Bio"
-          formControlName="bio"
-        ></textarea>
+        <textarea [ngClass]="getInputClasses('bio')" placeholder="Bio" formControlName="bio"></textarea>
+      </div>
+      <div class="form-wrapper">
+        <div class="file-input-wrapper" (click)="fileInput.click()">
+          <span style="color: #555; padding: 10px;">Click to upload a profile picture</span>
+        </div>
+        <input #fileInput type="file" (change)="onFileSelected($event)" style="display: none;" />
+        <Avatar [photoURL]="editProfile.get('photoURL')?.value" [isLarge]="true" [hasBorder]="true"></Avatar>
       </div>
     </div>
   </form>
