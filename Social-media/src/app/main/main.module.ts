@@ -48,7 +48,7 @@ import { SearchComponent } from './components/search/search.component';
     DateAgoPipe,
     CommentsComponent,
     PostComponent,
-    SearchComponent
+    SearchComponent,
   ],
   imports: [
     CommonModule,

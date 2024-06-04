@@ -43,11 +43,11 @@ import { Subscription } from 'rxjs';
         </g>
       </svg>
     </div>
-    <div
+    <div *ngIf="!authService.loggedInUserId"
     (click)="openLoginModal()"
      class="mt-6 hidden lg:block px-4 py-2 rounded-full bg-sky-500 hover:bg-opacity-90 cursor-pointer transition">
       <p class="text-white text-center font-semibold text-[15px]">
-        Tweet
+        Login
       </p>
     </div>
   `,
