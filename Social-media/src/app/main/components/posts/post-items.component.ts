@@ -73,7 +73,7 @@ import { AngularFireStorage } from '@angular/fire/storage';
               *ngFor="let tag of editableTagsArray; let last = last"
             >
               <!-- Kiểm tra nếu tag không phải là null thì mới hiển thị -->
-              <ng-container *ngIf="tag !== null">
+              <ng-container *ngIf="tag !== null && tag != ''">
                 <div class="tag">
                   <span
                     contenteditable="true"
@@ -376,7 +376,11 @@ export class PostItemsComponent implements OnInit {
     if (this.isEditing) {
       this.editableBody = this.post.body;
       this.editableTags = this.post.tags!.join(' ');
-      this.editableTagsArray = this.editableTags.split(' ');
+      if (this.editableTags != '')
+        {
+          this.editableTagsArray = this.editableTags.split(' ');
+        }
+      else this.editableDocumentArray = [];
       this.editableDocumentArray = this.post.documentUrls
         ? [...this.post.documentUrls]
         : [];
