@@ -192,5 +192,11 @@ export class PostsService {
         });
       });
     });
+    
   }
+  updatePost(postId: string, data: Partial<Post>): Promise<void> {
+    console.log('2')
+    return this.afs.collection<Post>('posts').doc(postId).update(data);
+  }
+
 }
