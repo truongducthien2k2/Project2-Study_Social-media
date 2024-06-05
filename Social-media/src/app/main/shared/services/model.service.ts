@@ -4,14 +4,15 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class ModelService {
-
-  constructor() { }
-
   private _isOpen: boolean = false;
   private _isClose: boolean = false;
   private _isRegisterModelOpen: boolean = false;
   private _isLoginModelOpen: boolean = false;
   private _isEditModalOpen: boolean = false;
+  private _isFollowModalOpen: boolean = false;
+  private _followModalType: 'followers' | 'followings' = 'followers'; // Default to followers
+
+  constructor() { }
 
   get isOpen(): boolean {
     return this._isOpen;
@@ -51,5 +52,21 @@ export class ModelService {
 
   set isEditModalOpen(value: boolean) {
     this._isEditModalOpen = value;
+  }
+  
+  get isFollowModalOpen(): boolean {
+    return this._isFollowModalOpen;
+  }
+
+  set isFollowModalOpen(value: boolean) {
+    this._isFollowModalOpen = value;
+  }
+
+  get followModalType(): 'followers' | 'followings' {
+    return this._followModalType;
+  }
+
+  set followModalType(value: 'followers' | 'followings') {
+    this._followModalType = value;
   }
 }

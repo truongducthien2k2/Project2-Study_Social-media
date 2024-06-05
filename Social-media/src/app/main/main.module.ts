@@ -25,6 +25,7 @@ import { DateAgoPipe } from './shared/pipes/date-ago.pipe';
 import { CommentsComponent } from './components/comments/comments.component';
 import { PostComponent } from './post/post.component';
 import { SearchComponent } from './components/search/search.component';
+import { FollowUserComponent } from './follow-user/follow-user.component';
 
 @NgModule({
   declarations: [
@@ -49,6 +50,7 @@ import { SearchComponent } from './components/search/search.component';
     CommentsComponent,
     PostComponent,
     SearchComponent,
+    FollowUserComponent,
   ],
   imports: [
     CommonModule,

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { AuthService } from '../shared/services/auth.service';
 import { UserService } from '../shared/services/user.service';
@@ -6,7 +6,7 @@ import { User } from '../interface';
 import { Subscription } from 'rxjs';
 import { ModelService } from '../shared/services/model.service';
 import { ConfigService } from '../shared/services/config.service';
-
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-user-profile',
   templateUrl: './user-profile.component.html',
@@ -20,7 +20,8 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   currentUserId: string = '';
   loading: boolean = false;
   isAdmin: boolean = false;
-
+  @Input() followersUserIds: string[] = [];
+  @Input() followingUserIds: string[] = [];
   private subscriptions: Subscription[] = [];
 
   constructor(
@@ -28,7 +29,8 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     private userService: UserService,
     private config: ConfigService,
     public auth: AuthService,
-    public modalService: ModelService
+    public modalService: ModelService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -39,6 +41,8 @@ export class UserProfileComponent implements OnInit, OnDestroy {
         this.getCurrentUserProfileInfo();
         this.getFollowers();
         this.getFollowing();
+        this.getFollowersUserIds();
+        this.getFollowingUserIds();
         if (this.auth.isLoggedIn) {
           this.userService.checkIfFollowed(this.auth.loggedInUserId, this.currentUserId).subscribe((isFollowed) => {
             this.isFollowed = isFollowed;
@@ -78,6 +82,9 @@ export class UserProfileComponent implements OnInit, OnDestroy {
       })
     );
   }
+  showFollowers(): void{
+    
+  }
 
   toggleFollow(): void {
     if (!this.auth.isLoggedIn) {
@@ -94,8 +101,42 @@ export class UserProfileComponent implements OnInit, OnDestroy {
       });
     }
   }
+  getFollowersUserIds(): void {
+    this.subscriptions.push(
+      this.userService.getFollowersUserIds(this.currentUserId).subscribe(userIds => {
+        this.followersUserIds = userIds;
+
+      })
+    );
+  }
+  getFollowingUserIds(): void {
+    this.subscriptions.push(
+      this.userService.getFollowingUserIds(this.currentUserId).subscribe(userIds => {
+        this.followingUserIds = userIds;
+
+      })
+    );
+  }
+  goToFollowing() {
+    if (this.followingUserIds.length > 0) {
+      this.router.navigate(['/user', this.currentUserId, 'following'], { queryParams: { followingUserIds: this.followingUserIds.join(',') } });
+    }
+  }
+
+  goToFollowers() {
+    if (this.followersUserIds.length > 0) {
+      this.router.navigate(['/user', this.currentUserId, 'followers'], { queryParams: { followersUserIds: this.followersUserIds.join(',') } });
+    }
+  }
+
+
 
   edit() {
     this.modalService.isEditModalOpen = true;
+  }
+  follow(type: 'followers' | 'followings'): void {
+    // Set the followModalType before opening the modal
+    this.modalService.followModalType = type;
+    this.modalService.isFollowModalOpen = true;
   }
 }

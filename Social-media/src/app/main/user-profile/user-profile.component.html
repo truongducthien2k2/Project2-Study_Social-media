@@ -23,11 +23,11 @@
       </div>
     </div>
     <div class="flex flex-row items-center mt-4 gap-6">
-      <div class="flex flex-row item-center gap-1">
+      <div class="flex flex-row item-center gap-1" (click)="follow('followings')">
         <p class="text-white">{{followingCount}}</p>
         <p class="text-white">Following</p>
       </div>
-      <div class="flex flex-row items-center gap-1">
+      <div class="flex flex-row items-center gap-1" (click)="follow('followers')">
         <p class="text-white">{{followersCount}}</p>
         <p class="text-white">Followers</p>
       </div>
@@ -39,3 +39,6 @@
   [user]="user"
   *ngIf="modalService.isEditModalOpen && user"
 ></app-edit-user>
+<app-follow-user [followingUserIds]="followingUserIds"  [followersUserIds]="followersUserIds"
+*ngIf="modalService.isFollowModalOpen && user">
+</app-follow-user>
