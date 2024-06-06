@@ -33,7 +33,6 @@ export class FollowUserComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    console.log('1', this.modalService.followModalType);
     this.loadFollowers();
   }
 

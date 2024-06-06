@@ -101,7 +101,7 @@ export class PostsService {
     }
   }
 
-  getPosts1(id: string = ''): Observable<Post[]> {
+  getPostsbyday(id: string = ''): Observable<Post[]> {
     if (id) {
       return combineLatest([
         this.afs
@@ -122,7 +122,7 @@ export class PostsService {
             );
           });
           return combineLatest(postObservables).pipe(
-            defaultIfEmpty() // Return an empty array if there are no posts available
+            defaultIfEmpty()
           );
         })
       );

@@ -5,6 +5,7 @@ import { UserProfileComponent } from './pages/user-profile/user-profile.componen
 import { HomeComponent } from './pages/home/home.component';
 import { PostComponent } from './components/post/post.component';
 import { SearchComponent } from './pages/search/search.component';
+import { NotificationComponent } from './pages/notification/notification.component';
 
 const routes: Routes = [
   {
@@ -12,6 +13,7 @@ const routes: Routes = [
       {
         path: '', component: HomeComponent, pathMatch: 'full'
       },
+      { path: 'notifications', component: NotificationComponent },
       {
         path: 'post/:id', component: PostComponent
       },
