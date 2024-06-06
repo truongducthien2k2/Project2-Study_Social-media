@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { User } from '../interface';
-import { UserService } from '../shared/services/user.service';
-import { ModelService } from '../shared/services/model.service';
+import { User } from '../../interface';
+import { UserService } from '../../shared/services/user.service';
+import { ModelService } from '../../shared/services/model.service';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { finalize } from 'rxjs/operators';
 

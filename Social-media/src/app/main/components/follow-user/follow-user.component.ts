@@ -1,12 +1,12 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { User } from '../interface';
-import { UserService } from '../shared/services/user.service';
-import { ModelService } from '../shared/services/model.service';
+import { User } from '../../interface';
+import { UserService } from '../../shared/services/user.service';
+import { ModelService } from '../../shared/services/model.service';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { finalize } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
-import { ConfigService } from '../shared/services/config.service';
+import { ConfigService } from '../../shared/services/config.service';
 
 @Component({
   selector: 'app-follow-user',

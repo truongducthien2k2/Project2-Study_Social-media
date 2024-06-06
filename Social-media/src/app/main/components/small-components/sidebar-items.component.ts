@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { SlidebarItems } from '../../interface';
-import { ModelService } from '../services/model.service';
-import { AuthService } from '../services/auth.service';
+import { ModelService } from '../../shared/services/model.service';
+import { AuthService } from '../../shared/services/auth.service';
 import { Subscription } from 'rxjs';
-import { UserService } from '../services/user.service';
+import { UserService } from '../../shared/services/user.service';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({

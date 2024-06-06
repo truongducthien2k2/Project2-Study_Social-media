@@ -1,11 +1,11 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { AuthService } from '../shared/services/auth.service';
-import { UserService } from '../shared/services/user.service';
-import { User } from '../interface';
+import { AuthService } from '../../shared/services/auth.service';
+import { UserService } from '../../shared/services/user.service';
+import { User } from '../../interface';
 import { Subscription } from 'rxjs';
-import { ModelService } from '../shared/services/model.service';
-import { ConfigService } from '../shared/services/config.service';
+import { ModelService } from '../../shared/services/model.service';
+import { ConfigService } from '../../shared/services/config.service';
 import { Router } from '@angular/router';
 @Component({
   selector: 'app-user-profile',
