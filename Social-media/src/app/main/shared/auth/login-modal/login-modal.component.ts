@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ModelService } from '../../services/model.service';
 import { AuthService } from '../../services/auth.service';
+import { filter, take } from 'rxjs/operators';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-login-modal',
@@ -11,7 +13,11 @@ import { AuthService } from '../../services/auth.service';
 export class LoginModalComponent implements OnInit {
   loginForm!: FormGroup;
 
-  constructor(private fb: FormBuilder, public modalService: ModelService, private authService: AuthService) { }
+  constructor(private fb: FormBuilder, public modalService: ModelService, private authService: AuthService
+    ,private router: Router, private route: ActivatedRoute
+  ) { 
+
+  }
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
@@ -46,8 +52,17 @@ export class LoginModalComponent implements OnInit {
     this.modalService.isRegisterModelOpen = true;
   }
 
-  handleSubmit(): void {
-    const value = this.loginForm.value;
-    this.authService.login(value.email, value.password).then(() => this.modalService.isLoginModelOpen = false)
-  }
+ handleSubmit(): void {
+  const value = this.loginForm.value;
+  this.authService.login(value.email, value.password).then(() => {
+    // Wait until the user data is updated in AuthService
+    this.authService.userData.pipe(
+      filter(user => !!user),
+      take(1)
+    ).subscribe(() => {
+      this.modalService.isLoginModelOpen = false;
+    });
+  });
+  this.router.navigate(['/']);
+}
 }

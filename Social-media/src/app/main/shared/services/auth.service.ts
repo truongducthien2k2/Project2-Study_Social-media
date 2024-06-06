@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { User } from '../../interface';
 import firebase from 'firebase/app'
 import 'firebase/firestore'
@@ -12,7 +12,7 @@ import 'firebase/firestore'
 })
 export class AuthService {
 
-  userData: Subject<any> = new Subject<any>();
+  userData: Subject<any> = new BehaviorSubject<any>(null);
 
   constructor(private afAuth: AngularFireAuth, private afs: AngularFirestore) {
     this.afAuth.authState.subscribe((user) => {
@@ -29,7 +29,6 @@ export class AuthService {
   async login(email: string, password: string): Promise<any> {
     return await this.afAuth.signInWithEmailAndPassword(email, password);
   }
-
   register(user: any): Promise<any> {
     return this.afAuth.createUserWithEmailAndPassword(user.email, user.password).then((res) => {
       this.setUserData(res.user, user.name, user.username)
@@ -53,7 +52,15 @@ export class AuthService {
       merge: true
     })
   }
-
+  async getUserIdByEmail(email: string): Promise<string | null> {
+    const usersRef = this.afs.collection('users', ref => ref.where('email', '==', email));
+    const snapshot = await usersRef.get().toPromise();
+    if (!snapshot.empty) {
+      const userDoc = snapshot.docs[0];
+      return userDoc.id;
+    }
+    return null;
+  }
   signOut(): void {
     this.afAuth.signOut().then((res) => {
       localStorage.removeItem('user');
