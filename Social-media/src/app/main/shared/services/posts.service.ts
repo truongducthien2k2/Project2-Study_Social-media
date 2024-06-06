@@ -101,10 +101,59 @@ export class PostsService {
     }
   }
 
+  getPosts1(id: string = ''): Observable<Post[]> {
+    if (id) {
+      return combineLatest([
+        this.afs
+          .collection<Post>('posts', (ref) => ref.where('userId', '==', id).orderBy('createdAt', 'desc'))
+          .valueChanges({ idField: 'postId' }),
+        this.afs.collection<User>('users').valueChanges({ idField: 'userId' }),
+      ]).pipe(
+        switchMap(([posts, users]) => {
+          const postObservables = posts.map((post) => {
+            const user = users.find((u) => u.userId === post.userId);
+            const comments$ = this.getCommentsByPostId(post.postId);
+  
+            return comments$.pipe(
+              map((comments) => {
+                const commentCount = comments.length;
+                return { ...post, user, commentCount };
+              })
+            );
+          });
+          return combineLatest(postObservables).pipe(
+            defaultIfEmpty() // Return an empty array if there are no posts available
+          );
+        })
+      );
+    } else {
+      return combineLatest([
+        this.afs.collection<Post>('posts', (ref) => ref.orderBy('createdAt', 'desc')).valueChanges({ idField: 'postId' }),
+        this.afs.collection<User>('users').valueChanges({ idField: 'userId' }),
+      ]).pipe(
+        switchMap(([posts, users]) => {
+          const postObservables = posts.map((post) => {
+            const user = users.find((u) => u.userId === post.userId);
+            const comments$ = this.getCommentsByPostId(post.postId);
+  
+            return comments$.pipe(
+              map((comments) => {
+                const commentCount = comments.length;
+                return { ...post, user, commentCount };
+              })
+            );
+          });
+          return combineLatest(postObservables).pipe(
+            defaultIfEmpty() // Return an empty array if there are no posts available
+          );
+        })
+      );
+    }
+  }
   deletePost(postID: string): Promise<void> {
     return this.afs.collection('posts').doc(postID).delete();
   }
-
+  
   getPostsByTags(tags: string[]): Observable<Post[]> {
     return combineLatest([
       this.afs

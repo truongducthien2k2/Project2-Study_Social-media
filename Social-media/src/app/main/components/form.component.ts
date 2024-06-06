@@ -25,7 +25,7 @@ import { UserService } from '../shared/services/user.service';
 
     <!-- Logged In User -->
     <div class="flex flex-row gap-4" *ngIf="auth.loggedInUserId">
-      <Avatar [photoURL]="user.photoURL"> </Avatar>
+    <Avatar *ngIf="user" [photoURL]="user.photoURL"></Avatar>
       <div class="w-full">
         <textarea [disabled]="isLoading"
         [(ngModel)]="body"
@@ -59,7 +59,7 @@ export class FormComponent  implements OnInit, OnDestroy{
   fileNames: string[] = [];
   files: File[] = [];
   subscription!: Subscription;
-  user!: User;
+  user?: User;
   loading: boolean = false;
   isAdmin: boolean = false;
 
@@ -76,6 +76,7 @@ export class FormComponent  implements OnInit, OnDestroy{
 
   ngOnInit(): void {
     this.getCurrentUserProfileInfo();
+
   }
 
   ngOnDestroy(): void {
@@ -84,7 +85,7 @@ export class FormComponent  implements OnInit, OnDestroy{
   getCurrentUserProfileInfo(): void {
     this.subscriptions.push(
       this.userService.getAllUsers().subscribe(users => {
-        this.user = users.find(u => u.uid === this.auth.loggedInUserId.toString()) as User;
+        this.user = users.find(u => u.uid === this.auth.loggedInUserId?.toString()) as User;
       })
     );
   }

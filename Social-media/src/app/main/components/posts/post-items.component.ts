@@ -30,18 +30,19 @@ import { AngularFireStorage } from '@angular/fire/storage';
             <span class="text-white text-sm ">
               {{ post.createdAt?.toDate() | dateAgo }}
             </span>
+            <!-- Edit and Delete Buttons -->
             <ng-container
               *ngIf="post.user?.uid === auth.loggedInUserId.toString()"
             >
               <span
-                class="text-white text-sm "
-                (click)="deletePost(post.postId!)"
+                class="text-blue-500 text-sm mr-3 cursor-pointer hover:underline"
+                (click)="toggleEditMode()">Edit</span
               >
-                Xóa
-              </span>
-              <span class="text-white text-sm " (click)="toggleEditMode()">
-                Chỉnh sửa
-              </span>
+              <span
+                class="text-red-500 text-sm cursor-pointer hover:underline"
+                (click)="deletePost(post.postId!)"
+                >Delete</span
+              >
             </ng-container>
           </div>
           <div
@@ -152,14 +153,11 @@ import { AngularFireStorage } from '@angular/fire/storage';
             </ng-container>
 
             <div class="flex justify-end mt-2">
-            <app-button
-                (click)="saveEdit()"
-                label="Save"
-                class="text-white "
+              <app-button (click)="saveEdit()" label="Save" class="text-white ">
+                ></app-button
               >
-              ></app-button>
               <app-button
-                 label="Cancel"
+                label="Cancel"
                 (click)="cancelEdit()"
                 class=" text-white"
               >
@@ -258,6 +256,7 @@ export class PostItemsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {}
+  
   removeDoc(doc: string): void {
     const index = this.editableDocumentArray.indexOf(doc);
     if (index !== -1) {
@@ -376,11 +375,9 @@ export class PostItemsComponent implements OnInit {
     if (this.isEditing) {
       this.editableBody = this.post.body;
       this.editableTags = this.post.tags!.join(' ');
-      if (this.editableTags != '')
-        {
-          this.editableTagsArray = this.editableTags.split(' ');
-        }
-      else this.editableDocumentArray = [];
+      if (this.editableTags != '') {
+        this.editableTagsArray = this.editableTags.split(' ');
+      } else this.editableDocumentArray = [];
       this.editableDocumentArray = this.post.documentUrls
         ? [...this.post.documentUrls]
         : [];

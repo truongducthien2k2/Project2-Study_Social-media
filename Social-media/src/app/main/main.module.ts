@@ -27,7 +27,7 @@ import { PostComponent } from './components/post/post.component';
 import { SearchComponent } from './pages/search/search.component';
 import { FollowUserComponent } from './components/follow-user/follow-user.component';
 import { NotificationComponent } from './pages/notification/notification.component';
-
+import { MatIconModule } from '@angular/material/icon';
 @NgModule({
   declarations: [
     LayoutComponent,
@@ -53,12 +53,14 @@ import { NotificationComponent } from './pages/notification/notification.compone
     SearchComponent,
     FollowUserComponent,
     NotificationComponent,
+    
   ],
   imports: [
     CommonModule,
     MainRoutingModule,
     ReactiveFormsModule,
     FormsModule, 
+    
   ]
 })
 export class MainModule { }
