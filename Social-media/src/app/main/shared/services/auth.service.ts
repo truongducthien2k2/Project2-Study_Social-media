@@ -15,19 +15,20 @@ export class AuthService {
   userData: Subject<any> = new BehaviorSubject<any>(null);
 
   constructor(private afAuth: AngularFireAuth, private afs: AngularFirestore) {
-    this.afAuth.authState.subscribe((user) => {
+    this.afAuth.authState.subscribe(async (user) => {
       if(user) {
         this.userData.next(user);
-        localStorage.setItem('user', JSON.stringify(user));
+        await localStorage.setItem('user', JSON.stringify(user));
       } else {
         this.userData.next(null);
-        localStorage.removeItem('user');
+        await localStorage.removeItem('user');
       }
     })
   }
 
   async login(email: string, password: string): Promise<any> {
-    return await this.afAuth.signInWithEmailAndPassword(email, password);
+    await this.afAuth.signInWithEmailAndPassword(email, password);
+    window.location.reload();
   }
   register(user: any): Promise<any> {
     return this.afAuth.createUserWithEmailAndPassword(user.email, user.password).then((res) => {
@@ -61,9 +62,9 @@ export class AuthService {
     }
     return null;
   }
-  signOut(): void {
-    this.afAuth.signOut().then((res) => {
-      localStorage.removeItem('user');
+  async signOut(): Promise<void> {
+    await this.afAuth.signOut().then(async (res) => {
+      await localStorage.removeItem('user');
     })
   }
 

@@ -58,7 +58,7 @@ import { ActivatedRoute, Router } from '@angular/router';
     <!-- Logout Button -->
     <div
       (click)="signOut()"
-      *ngIf="authService.userData | async"
+      *ngIf="(authService.userData | async)"
       class="flex flex-row items-center"
     >
       <div

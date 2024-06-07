@@ -54,9 +54,9 @@ export class LoginModalComponent implements OnInit {
 
  handleSubmit(): void {
   const value = this.loginForm.value;
-  this.authService.login(value.email, value.password).then(() => {
+  this.authService.login(value.email, value.password).then(async () => {
     // Wait until the user data is updated in AuthService
-    this.authService.userData.pipe(
+    await this.authService.userData.pipe(
       filter(user => !!user),
       take(1)
     ).subscribe(() => {

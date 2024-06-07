@@ -27,8 +27,8 @@ export class PostsComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute
   ) {}
 
-  ngOnInit(): void {
-    this.subscription = this.activatedRoute.paramMap?.subscribe(
+  async ngOnInit(): Promise<void> {
+    this.subscription = await this.activatedRoute.paramMap?.subscribe(
       (params: ParamMap) => {
         this.userId = params.get('id') || '';
         this.loading = true;
@@ -37,8 +37,9 @@ export class PostsComponent implements OnInit, OnDestroy {
     );
   }
 
-  private getPosts(): void {
-    this.subscription = this.postService.getPostsbyday(this.userId).subscribe(
+  private async getPosts(): Promise<void> {
+    this.posts = [];
+    this.subscription = await this.postService.getPostsbyday(this.userId).subscribe(
       (posts) => {
         this.posts = posts;
         this.loading = false;
