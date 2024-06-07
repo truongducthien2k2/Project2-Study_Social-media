@@ -1,4 +1,4 @@
-<div class="col-span-3 lg:col-span-2 border-x-[1px] border-neutral-800 h-full">
+<div class="col-span-3 lg:col-span-2 border-x-[1px] border-neutral-800">
     <!-- Header -->
     <div class="flex items-center justify-between p-4">
       <app-header *ngIf="tags.length" [title]="'Results for: ' + '#' + tags.join(', ')" [showBackArrow]="false"></app-header>
@@ -17,7 +17,7 @@
     </div>
   
     <!-- Content Area -->
-    <div class="h-full overflow-y-auto">
+    <div class="overflow-y-auto">
       <div *ngFor="let post of filteredPosts">
         <app-post-items [post]="post"></app-post-items>
       </div>
