@@ -1,11 +1,7 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { User } from '../../interface';
-import { UserService } from '../../shared/services/user.service';
-import { ModelService } from '../../shared/services/model.service';
-import { AngularFireStorage } from '@angular/fire/storage';
-import { finalize } from 'rxjs/operators';
-import { Subscription } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { NotificationService } from '../../shared/services/notification.service';
+import { AuthService } from '../../shared/services/auth.service';
+import { Notification } from '../../interface';
 import { ConfigService } from '../../shared/services/config.service';
 
 @Component({
@@ -14,73 +10,25 @@ import { ConfigService } from '../../shared/services/config.service';
   styleUrls: ['./notification.component.scss']
 })
 export class NotificationComponent implements OnInit {
+  notifications: Notification[] = [];
+  notificationIds: Set<string> = new Set();
 
-  editProfile!: FormGroup;
-  @Input() followersUserIds: string[] = [];
-  @Input() followingUserIds: string[] = [];
-  currentUserId: string = '';
-  private subscriptions: Subscription[] = [];
-  followers: User[] = [];
-  followings: User[] = [];
-  constructor(
-    public modalService: ModelService,
-    private fb: FormBuilder,
-    public userService: UserService,
-    private storage: AngularFireStorage
-  ) {
-    this.editProfile = this.fb.group({
-      name: ['', Validators.required],
-    });
-  }
+  constructor(private notificationService: NotificationService, private authService: AuthService, private config: ConfigService) { }
 
-  ngOnInit(): void {
-    this.loadFollowers();
-  }
-
-  ngOnDestroy(): void {
-    // Unsubscribe from all subscriptions to avoid memory leaks
-    this.subscriptions.forEach((sub) => sub.unsubscribe());
-  }
-
-  loadFollowers(): void {
-    const userIds = this.modalService.followModalType === 'followers' ? this.followersUserIds : this.followingUserIds;
-    const uniqueUids = new Set<string>();
-  
-    userIds.forEach((userId) => {
-      const sub = this.userService.getUser(userId).subscribe((user) => {
-        if (user && !uniqueUids.has(user.uid)) {
-          this.followers.push(user);
-          uniqueUids.add(user.uid);
+  ngOnInit() {
+    this.config.updateHeaderSettings('Notification')
+    const userId = this.authService.loggedInUserId;
+    this.notificationService.getAllNotifications().subscribe(notifications => {
+      notifications.forEach(notification => {
+        if (notification.userIdTo === userId && !this.notificationIds.has(notification.id)) {
+          this.notifications.push(notification);
+          this.notificationIds.add(notification.id); 
         }
       });
-      this.subscriptions.push(sub);
     });
   }
-  
 
-  // Hàm để trả về các classes CSS dựa trên trạng thái của người dùng
-  getInputClasses(fieldName: string, followId: string): any {
-    const isFollowing = this.followersUserIds.includes(followId);
-    return {
-      'w-full': true,
-      'p-4': true,
-      'text-lg': true,
-      'bg-black': true,
-      'border-2': true,
-      'border-neutral-800': true,
-      'rounded-md': true,
-      'outline-none': true,
-      'text-white': true,
-      'focus:border-sky-500': true,
-      'focus:border-red-500':
-        isFollowing &&
-        this.editProfile.get(fieldName)?.invalid &&
-        this.editProfile.get(fieldName)?.touched,
-      'focus:border-2': true,
-      transition: true,
-      'disabled:bg-neutral-900': true,
-      'disabled:opacity-70': true,
-      'disabled:cursor-not-allowed': true,
-    };
+  markAsSeen(notificationId: string) {
+    this.notificationService.markAsSeen(notificationId);
   }
 }

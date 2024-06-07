@@ -1,8 +1,16 @@
-<Modal [isOpen]="true" [title]="'notification'"
-    (onClose)="modalService.isFollowModalOpen = false">
+<Modal>
     <div class="p-4">
-        <form [formGroup]="editProfile">
+        <form>
             <div class="flex flex-col items-center gap-4">
+                <ng-container *ngFor="let notification of notifications">
+                    <div class="w-full flex items-center bg-gray-900 p-4 rounded-lg mb-2">
+                        <img [src]="" alt="Profile Picture" width="70" height="70">
+                        <div class="">
+                            <p class="text-white text-lg font-semibold">{{ notification.message + notification.userIdTo }}</p>
+                            <p class="text-gray-400">{{ notification.createdAt.toDate() | dateAgo }}</p>
+                        </div>
+                    </div>
+                </ng-container>
             </div>
         </form>
     </div>
