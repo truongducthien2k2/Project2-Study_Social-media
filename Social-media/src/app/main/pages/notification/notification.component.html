@@ -1,15 +1,29 @@
-<Modal>
+<Modal (onClose)="gohome()">
     <div class="p-4">
+        <h2 class="text-xl text-white font-bold mb-4">Notification</h2>
         <form>
-            <div class="flex flex-col items-center gap-4">
-                <ng-container *ngFor="let notification of notifications">
-                    <div class="w-full flex items-center bg-gray-900 p-4 rounded-lg mb-2">
-                        <img [src]="" alt="Profile Picture" width="70" height="70">
-                        <div class="">
-                            <p class="text-white text-lg font-semibold">{{ notification.message + notification.userIdTo }}</p>
-                            <p class="text-gray-400">{{ notification.createdAt.toDate() | dateAgo }}</p>
+            <div class="flex flex-col items-center gap-4 w-full" >
+                <ng-container *ngFor="let notification of notifications" >
+                    <ng-container *ngIf="!notification.seen">
+                    <div class="w-full flex items-center bg-gray-800 p-4 rounded-lg shadow-lg mb-2" (click)="markAsSeen(notification.id)"  (click)="gotouser(users[notification.userIdFrom].uid)">
+                        <img [src]="users[notification.userIdFrom].photoURL" alt="Profile Picture" class="w-16 h-16 rounded-full object-cover">
+                        <div class="ml-4 flex-col">
+                            <p class="text-white text-lg font-semibold">{{ notification.message + users[notification.userIdFrom].username }}</p>
+                            <p class="text-gray-400 text-sm">{{ notification.createdAt.toDate() | dateAgo }}</p>
                         </div>
                     </div>
+                </ng-container>
+                </ng-container>
+                <ng-container *ngFor="let notification of notifications" >
+                    <ng-container *ngIf="notification.seen">
+                    <div class="w-full flex items-center bg-gray-800 p-4 rounded-lg shadow-lg mb-2" (click)="markAsSeen(notification.id)"  (click)="gotouser(users[notification.userIdFrom].uid)">
+                        <img [src]="users[notification.userIdFrom].photoURL" alt="Profile Picture" class="w-16 h-16 rounded-full object-cover">
+                        <div class="ml-4 flex-col">
+                            <p class="text-white text-lg font-semibold">{{ notification.message + users[notification.userIdFrom].username }}</p>
+                            <p class="text-gray-400 text-sm">{{ notification.createdAt.toDate() | dateAgo }}</p>
+                        </div>
+                    </div>
+                </ng-container>
                 </ng-container>
             </div>
         </form>

@@ -1,15 +1,17 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { Notification } from '../../interface';
+import { Notification, User } from '../../interface';
 import firebase from 'firebase/app'; // Sửa lỗi import
 import 'firebase/firestore';
-import { Observable } from 'rxjs';
+import { Observable, forkJoin } from 'rxjs';
+import { UserService } from './user.service';
+import { map } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
 export class NotificationService {
 
-  constructor(private afs: AngularFirestore) { }
+  constructor(private afs: AngularFirestore,  private userService: UserService) { }
 
   // Tạo thông báo mới
   createNotification(notification: Notification): Promise<void> {
@@ -55,5 +57,12 @@ export class NotificationService {
       });
       return batch.commit();
     });
+  }
+  getUsersFromNotifications(notifications: Notification[]): Observable<User[]> {
+    const userIds: string[] = notifications.map(notification => notification.userIdFrom);
+    const userObservables: Observable<User | undefined>[] = userIds.map(userId => this.userService.getUser(userId));
+    return forkJoin(userObservables).pipe(
+      map(users => users.filter(user => user !== undefined) as User[])
+    );
   }
 }
