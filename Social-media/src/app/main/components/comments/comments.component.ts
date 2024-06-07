@@ -2,6 +2,10 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Comment } from '../../interface';
 import { PostsService } from '../../shared/services/posts.service';
 import { AuthService } from '../../shared/services/auth.service';
+import { Router } from '@angular/router';
+import { AngularFireStorage } from '@angular/fire/storage';
+import { Observable, forkJoin } from 'rxjs';
+import { finalize, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-comments',
@@ -51,15 +55,68 @@ import { AuthService } from '../../shared/services/auth.service';
 export class CommentsComponent implements OnInit {
   comments: Comment[] = [];
   @Input() postId: string = '';
-
-  constructor(private postService: PostsService, public auth: AuthService) {}
+  isEditing: boolean = false;
+  editableBody: string = '';
+  editableDocumentArray: string[] = [];
+  selectedFiles: File[] = [];
+  fileNames: string[] = [];
+  files: File[] = [];
+  showOptions: boolean = false;
+  constructor(    public auth: AuthService,
+    private router: Router,
+    private postService: PostsService,
+    private storage: AngularFireStorage) {}
 
   ngOnInit(): void {
     this.postService.getCommentsByPostId(this.postId).subscribe((comments) => {
       this.comments = comments;
     });
   }
+  toggleOptions(): void {
+    this.showOptions = !this.showOptions;
+  }
 
+  removeDoc(doc: string): void {
+    const index = this.editableDocumentArray.indexOf(doc);
+    if (index !== -1) {
+      this.editableDocumentArray.splice(index, 1);
+    }
+  }
+  uploadFiles(): Observable<string[]> {
+    const uploadObservables = this.files.map((file) => {
+      const filePath = `uploads/${file.name}`;
+      const fileRef = this.storage.ref(filePath);
+      const task = this.storage.upload(filePath, file);
+
+      return task
+        .snapshotChanges()
+        .pipe(finalize(() => fileRef.getDownloadURL()));
+    });
+
+    return forkJoin(uploadObservables).pipe(
+      switchMap((tasks: any[]) => {
+        const urlObservables = tasks.map((task: any) => {
+          const fileRef = this.storage.ref(`uploads/${task.metadata.name}`);
+          return fileRef.getDownloadURL();
+        });
+        return forkJoin(urlObservables);
+      })
+    );
+  }
+
+
+
+  onFilesSelected(event: any) {
+    const selectedFiles: File[] = Array.from(event.target.files);
+    if (selectedFiles.length) {
+      this.selectedFiles = selectedFiles;
+      this.fileNames = selectedFiles.map((file) => file.name);
+    } else {
+      this.fileNames = [];
+      this.selectedFiles = [];
+    }
+    console.log('1', this.selectedFiles);
+  }
   deleteComment(commentId: string): void {
     this.postService
       .deleteComment(commentId)

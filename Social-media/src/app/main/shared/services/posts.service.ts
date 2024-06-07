@@ -150,26 +150,28 @@ export class PostsService {
       );
     }
   }
+  
   deletePost(postID: string): Promise<void> {
     return this.afs.collection('posts').doc(postID).delete();
   }
   
   getPostsByTags(tags: string[]): Observable<Post[]> {
     return combineLatest([
-      this.afs
-        .collection<Post>('posts', (ref) =>
-          ref.where('tags', 'array-contains-any', tags)
-        )
-        .valueChanges({ idField: 'postId' }),
+      this.afs.collection<Post>('posts', ref => 
+        ref.where('tags', 'array-contains-any', tags)
+      ).valueChanges({ idField: 'postId' }),
       this.afs.collection<User>('users').valueChanges({ idField: 'userId' }),
     ]).pipe(
       switchMap(([posts, users]) => {
-        const postObservables = posts.map((post) => {
-          const user = users.find((u) => u.userId === post.userId);
+        const filteredPosts = posts.filter(post => 
+          tags.every(tag => post.tags?.includes(tag))
+        );
+        const postObservables = filteredPosts.map(post => {
+          const user = users.find(u => u.userId === post.userId);
           const comments$ = this.getCommentsByPostId(post.postId);
 
           return comments$.pipe(
-            map((comments) => {
+            map(comments => {
               const commentCount = comments.length;
               return { ...post, user, commentCount };
             })

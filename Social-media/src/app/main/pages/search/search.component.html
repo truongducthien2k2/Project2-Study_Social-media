@@ -1,25 +1,26 @@
 <div class="col-span-3 lg:col-span-2 border-x-[1px] border-neutral-800 h-full">
     <!-- Header -->
     <div class="flex items-center justify-between p-4">
-        <app-header *ngIf="tag" [title]="'Results #' + tag" [showBackArrow]="false"></app-header>
-        <button *ngIf="tag" (click)="clearTag()" class="bg-white-500 text-white px-4 py-2 rounded ml-4">X</button>
+      <app-header *ngIf="tags.length" [title]="'Results for: ' + '#' + tags.join(', ')" [showBackArrow]="false"></app-header>
+      <button *ngIf="tags.length" (click)="clearTags()" class="bg-white-500 text-white px-4 py-2 rounded ml-4">X</button>
     </div>
     <!-- Search Bar -->
     <div class="p-4">
-        <input
-            type="text"
-            [(ngModel)]="searchQuery"
-            (input)="onSearchChange()"
-            (keydown.enter)="onEnterPress()"
-            placeholder="Search..."
-            class="w-full p-2 rounded border border-neutral-800 bg-neutral-900 text-black"
-        />
+      <input
+        type="text"
+        [(ngModel)]="searchQuery"
+        (input)="onSearchChange()"
+        (keydown.enter)="onEnterPress()"
+        placeholder="Search..."
+        class="w-full p-2 rounded border border-neutral-800 bg-neutral-900 text-black"
+      />
     </div>
-
+  
     <!-- Content Area -->
     <div class="h-full overflow-y-auto">
-        <div *ngFor="let post of filteredPosts">
-            <app-post-items [post]="post"></app-post-items>
-        </div>
+      <div *ngFor="let post of filteredPosts">
+        <app-post-items [post]="post"></app-post-items>
+      </div>
     </div>
-</div>
+  </div>
+  

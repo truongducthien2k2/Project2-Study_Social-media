@@ -12,7 +12,7 @@ import { ConfigService } from '../../shared/services/config.service';
 export class SearchComponent implements OnInit {
   posts: Post[] = [];
   filteredPosts: Post[] = [];
-  tag: string | null = null;
+  tags: string[] = [];
   searchQuery: string = '';
 
   constructor(
@@ -25,14 +25,15 @@ export class SearchComponent implements OnInit {
   ngOnInit(): void {
     this.config.updateHeaderSettings('Search');
     this.route.paramMap.subscribe(params => {
-      this.tag = params.get('tag');
+      const tagParam = params.get('tag');
+      this.tags = tagParam ? tagParam.split(',') : [];
       this.fetchPosts();
     });
   }
 
   fetchPosts(): void {
-    if (this.tag) {
-      this.postService.getPostsByTags([this.tag]).subscribe((posts) => {
+    if (this.tags.length > 0) {
+      this.postService.getPostsByTags(this.tags).subscribe((posts) => {
         this.posts = posts;
         this.filteredPosts = posts;
       });
@@ -45,10 +46,11 @@ export class SearchComponent implements OnInit {
   }
 
   onSearchChange(): void {
-    if (this.searchQuery.startsWith('#')) {
-      const queryTag = this.searchQuery.substring(1).toLowerCase();
+    const queryTags = this.searchQuery.split(' ').map(tag => tag.trim().toLowerCase());
+    if (queryTags.every(tag => tag.startsWith('#'))) {
+      const strippedTags = queryTags.map(tag => tag.substring(1));
       this.filteredPosts = this.posts.filter(post => 
-        post.tags?.some(tag => tag.toLowerCase().includes(queryTag))
+        strippedTags.every(queryTag => post.tags?.some(tag => tag.toLowerCase().includes(queryTag)))
       );
     } else {
       this.filteredPosts = this.posts.filter(post => 
@@ -56,24 +58,26 @@ export class SearchComponent implements OnInit {
       );
     }
   }
+
   onEnterPress(): void {
-    if (this.searchQuery.startsWith('#')) {
-      const queryTag = this.searchQuery.substring(1);
-      this.gotoSearch(queryTag);
-    }
-    else{
+    if (this.searchQuery.split(' ').every(tag => tag.startsWith('#'))) {
+      const queryTags = this.searchQuery.split(' ').map(tag => tag.trim().substring(1));
+      this.gotoSearch(queryTags.join(','));
+    } else {
       this.gotoSearch1();
     }
   }
 
-  gotoSearch(tag: string): void {
-    this.router.navigate(['search', { tag }]);
+  gotoSearch(tags: string): void {
+    this.router.navigate(['search', { tag: tags }]);
   }
+
   gotoSearch1(): void {
     this.router.navigate(['search']);
   }
-  clearTag(): void {
-    this.tag = null;
+
+  clearTags(): void {
+    this.tags = [];
     this.fetchPosts();
   }
 }

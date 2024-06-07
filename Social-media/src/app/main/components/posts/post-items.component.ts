@@ -31,18 +31,33 @@ import { AngularFireStorage } from '@angular/fire/storage';
               {{ post.createdAt?.toDate() | dateAgo }}
             </span>
             <!-- Edit and Delete Buttons -->
-            <ng-container
-              *ngIf="post.user?.uid === auth.loggedInUserId.toString()"
+
+            <span
+              (click)="toggleOptions()"
+              class="material-icons cursor-pointer text-white"
             >
-              <span
-                class="text-blue-500 text-sm mr-3 cursor-pointer hover:underline"
-                (click)="toggleEditMode()">Edit</span
-              >
-              <span
-                class="text-red-500 text-sm cursor-pointer hover:underline"
-                (click)="deletePost(post.postId!)"
-                >Delete</span
-              >
+              more_vert
+            </span>
+            <ng-container
+              *ngIf="
+                showOptions && post.user?.uid === auth.loggedInUserId.toString()
+              "
+            >
+              <div class="options">
+                <span
+                  class="material-icons text-blue-500 text-sm cursor-pointer hover:underline"
+                  style="margin-right: 15px; margin-left: 3px;"
+                  (click)="toggleEditMode()"
+                >
+                  <strong>edit</strong>
+                </span>
+                <span
+                  class="material-icons text-red-500 text-sm cursor-pointer hover:underline"
+                  (click)="deletePost(post.postId!)"
+                >
+                  <strong>delete</strong>
+                </span>
+              </div>
             </ng-container>
           </div>
           <div
@@ -153,12 +168,18 @@ import { AngularFireStorage } from '@angular/fire/storage';
             </ng-container>
 
             <div class="flex justify-end mt-2">
-              <app-button (click)="saveEdit()" label="Save" class="text-white ">
+              <app-button
+                (click)="saveEdit()"
+                (click)="toggleOptions()"
+                label="Save"
+                class="text-white "
+              >
                 ></app-button
               >
               <app-button
                 label="Cancel"
                 (click)="cancelEdit()"
+                (click)="toggleOptions()"
                 class=" text-white"
               >
               </app-button>
@@ -248,15 +269,18 @@ export class PostItemsComponent implements OnInit {
   newTag: string = '';
   fileNames: string[] = [];
   files: File[] = [];
+  showOptions: boolean = false;
   constructor(
     public auth: AuthService,
     private router: Router,
     private postService: PostsService,
     private storage: AngularFireStorage
   ) {}
-
+  toggleOptions(): void {
+    this.showOptions = !this.showOptions;
+  }
   ngOnInit(): void {}
-  
+
   removeDoc(doc: string): void {
     const index = this.editableDocumentArray.indexOf(doc);
     if (index !== -1) {
