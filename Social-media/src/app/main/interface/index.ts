@@ -35,3 +35,13 @@ export interface Comment {
     userId: string;
     user?: User;
 }
+export interface Notification {
+    id: string;
+    message: string;
+    userIdTo: string;
+    userIdFrom: string;
+    target: string;
+    type: string;
+    seen: boolean;
+    createdAt?: any;
+}

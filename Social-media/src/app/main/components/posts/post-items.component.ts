@@ -6,6 +6,8 @@ import { PostsService } from '../../shared/services/posts.service';
 import { Observable, forkJoin } from 'rxjs';
 import { finalize, switchMap } from 'rxjs/operators';
 import { AngularFireStorage } from '@angular/fire/storage';
+import { NotificationService } from '../../shared/services/notification.service';
+import { Notification } from '../../interface';
 @Component({
   selector: 'app-post-items',
   template: `
@@ -274,8 +276,36 @@ export class PostItemsComponent implements OnInit {
     public auth: AuthService,
     private router: Router,
     private postService: PostsService,
-    private storage: AngularFireStorage
+    private storage: AngularFireStorage,
+    private notificationService: NotificationService
   ) {}
+  toggleLike(event: Event): void {
+    event.stopPropagation();
+    if (this.post.postId) {
+      this.postService
+        .toggleLike(this.post.postId, this.auth.loggedInUserId)
+        .subscribe(() => {
+          if (this.post.likes?.includes(this.auth.loggedInUserId)) {
+            this.notificationService.deleteLikeNotification(this.post.postId!, this.post.userId, this.auth.loggedInUserId)
+              .then(() => {
+                console.log('Notification deleted successfully');
+              }).catch((error) => {
+                console.error('Error deleting notification:', error);
+              });
+          } else {
+            this.notificationService.createLikeNotification(this.post.postId!, this.post.userId, this.auth.loggedInUserId)
+              .then(() => {
+                console.log('Notification created successfully');
+              }).catch((error) => {
+                console.error('Error creating notification:', error);
+              });
+          }
+        });
+    }
+  }
+  
+
+  
   toggleOptions(): void {
     this.showOptions = !this.showOptions;
   }
@@ -444,14 +474,7 @@ export class PostItemsComponent implements OnInit {
     this.isEditing = false;
   }
 
-  toggleLike(event: Event): void {
-    event.stopPropagation();
-    if (this.post.postId) {
-      this.postService
-        .toggleLike(this.post.postId, this.auth.loggedInUserId)
-        .subscribe();
-    }
-  }
+  
 
   goToPost(id: string | undefined): void {
     this.router.navigate(['post', id]);

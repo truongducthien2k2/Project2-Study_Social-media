@@ -3,6 +3,7 @@ import { Observable, forkJoin } from 'rxjs';
 import { User } from '../../interface';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { map } from 'rxjs/operators';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -34,7 +35,6 @@ export class UserService {
     )
   }
   
-
   checkIfFollowed(currentUserId: string, userIdToCheck: string): Observable<boolean> {
     const currentUserRef = this.afs.collection('users').doc(currentUserId);
     const following = currentUserRef.collection('following').doc(userIdToCheck);
@@ -71,21 +71,22 @@ export class UserService {
 
     return batch.commit();
   }
+
   getFollowersUserIds(userId: string): Observable<string[]> {
     const userRef = this.afs.collection('users').doc(userId);
     return userRef.collection('followers').snapshotChanges().pipe(
       map(actions => actions.map(a => a.payload.doc.id))
     );
   }
+
   getFollowingUserIds(userId: string): Observable<string[]> {
     const userRef = this.afs.collection('users').doc(userId);
     return userRef.collection('following').snapshotChanges().pipe(
       map(actions => actions.map(a => a.payload.doc.id))
     );
   }
+
   getUser(userId: string): Observable<User | undefined> {
     return this.afs.collection<User>('users').doc(userId).valueChanges();
   }
-  
-
 }
