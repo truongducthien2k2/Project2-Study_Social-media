@@ -34,6 +34,7 @@ export interface Comment {
     createdAt?: any;
     userId: string;
     user?: User;
+    documentUrls?: string[];
 }
 export interface Notification {
     id: string;

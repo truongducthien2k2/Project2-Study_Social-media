@@ -230,6 +230,7 @@ import { Notification } from '../../interface';
           <div class="flex flex-row items-center mt-3 gap-10">
             <div
               class="flex flex-row items-center text-neutral-500 gap-2 cursor-pointer transition hover:text-sky-500"
+              (click)="goToPost(post.postId)"
             >
               <span class="text-white material-icons"> mode_comment </span>
               <p class="text-white">
