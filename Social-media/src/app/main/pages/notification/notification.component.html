@@ -16,7 +16,7 @@
                 </ng-container>
                 <ng-container *ngFor="let notification of notifications" >
                     <ng-container *ngIf="notification.seen">
-                    <div class="w-full flex items-center bg-gray-800 p-4 rounded-lg shadow-lg mb-2" (click)="markAsSeen(notification.id)"  (click)="gotouser(users[notification.userIdFrom].uid)">
+                    <div class="w-full flex items-center bg-black p-4 rounded-lg shadow-lg mb-2" (click)="markAsSeen(notification.id)"  (click)="gotouser(users[notification.userIdFrom].uid)">
                         <img [src]="users[notification.userIdFrom].photoURL" alt="Profile Picture" class="w-16 h-16 rounded-full object-cover">
                         <div class="ml-4 flex-col">
                             <p class="text-white text-lg font-semibold">{{ notification.message + users[notification.userIdFrom].username }}</p>

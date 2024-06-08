@@ -287,26 +287,36 @@ export class PostItemsComponent implements OnInit {
         .toggleLike(this.post.postId, this.auth.loggedInUserId)
         .subscribe(() => {
           if (this.post.likes?.includes(this.auth.loggedInUserId)) {
-            this.notificationService.deleteLikeNotification(this.post.postId!, this.post.userId, this.auth.loggedInUserId)
+            this.notificationService
+              .deleteLikeNotification(
+                this.post.postId!,
+                this.post.userId,
+                this.auth.loggedInUserId
+              )
               .then(() => {
                 console.log('Notification deleted successfully');
-              }).catch((error) => {
+              })
+              .catch((error) => {
                 console.error('Error deleting notification:', error);
               });
           } else {
-            this.notificationService.createLikeNotification(this.post.postId!, this.post.userId, this.auth.loggedInUserId)
+            this.notificationService
+              .createLikeNotification(
+                this.post.postId!,
+                this.post.userId,
+                this.auth.loggedInUserId
+              )
               .then(() => {
                 console.log('Notification created successfully');
-              }).catch((error) => {
+              })
+              .catch((error) => {
                 console.error('Error creating notification:', error);
               });
           }
         });
     }
   }
-  
 
-  
   toggleOptions(): void {
     this.showOptions = !this.showOptions;
   }
@@ -474,8 +484,6 @@ export class PostItemsComponent implements OnInit {
   cancelEdit(): void {
     this.isEditing = false;
   }
-
-  
 
   goToPost(id: string | undefined): void {
     this.router.navigate(['post', id]);

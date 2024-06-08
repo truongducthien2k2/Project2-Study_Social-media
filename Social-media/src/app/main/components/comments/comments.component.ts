@@ -32,141 +32,156 @@ import { CommentService } from '../../shared/services/comment.service';
             <span class="text-white text-sm">
               {{ comment.createdAt?.toDate() | dateAgo }}
             </span>
-            <ng-container
-              *ngIf="comment.user?.uid === auth.loggedInUserId.toString()"
+            <!-- Edit and Delete Buttons -->
+            <span
+              (click)="toggleOptions()"
+              class="material-icons cursor-pointer text-white"
             >
-              <span
-                class="text-white text-sm "
-                (click)="deleteComment(comment.id!)"
-              >
-                Xóa
-              </span>
-              <span 
-                class="text-white text-sm "
-                (click)="toggleEditMode(comment.id!)"
-              > Chỉnh sửa </span>
+              more_vert
+            </span>
+            <ng-container
+              *ngIf="
+                showOptions &&
+                comment.user?.uid === auth.loggedInUserId.toString()
+              "
+            >
+              <div class="options">
+                <span
+                  class="material-icons text-blue-500 text-sm cursor-pointer hover:underline"
+                  style="margin-right: 15px; margin-left: 3px;"
+                  (click)="toggleEditMode(comment.id!)"
+                >
+                  <strong>edit</strong>
+                </span>
+                <span
+                  class="material-icons text-red-500 text-sm cursor-pointer hover:underline"
+                  (click)="deleteComment(comment.id!)"
+                >
+                  <strong>delete</strong>
+                </span>
+              </div>
             </ng-container>
           </div>
+          <!-- Body-->
           <div class="text-white mt-1">
             {{ comment.body }}
           </div>
 
-          <div class="mt-3" *ngIf="!isEditing">
-              <ng-container *ngFor="let url of comment.documentUrls">
-                <div *ngIf="isImage(url)" class="mt-2">
-                  <img
-                    [src]="url"
-                    alt="Comment Image"
-                    class="max-w-full h-auto"
-                  />
-                </div>
-                <div *ngIf="isPdf(url)" class="mt-2">
-                  <a
-                    [href]="url"
-                    target="_blank"
-                    class="text-blue-500 hover:underline"
-                    >View PDF</a
-                  >
-                </div>
-                <!-- Add more conditions for other document types if needed -->
-                <div *ngIf="!isImage(url) && !isPdf(url)" class="mt-2">
-                  <a
-                    [href]="url"
-                    target="_blank"
-                    class="text-blue-500 hover:underline"
-                    >View Document</a
-                  >
-                </div>
-              </ng-container>
-            </div>
-
-            <div class="mt-1" *ngIf="isEditing">
-              <div
-                contenteditable="true"
-                class="editable-content"
-                style="background-color: #ffffff; border: 1px solid #cccccc; padding: 5px; min-height: 50px;"
-                (input)="onEdit($event)"
-              >
-                {{ editableBody }}
-              </div>
-              <div style="display: flex; align-items: center;">
-                <app-button
-                  (click)="fileInput.click()"
-                  label="Select documents"
-                ></app-button>
-                <span style="color: #555; padding: 10px;">{{
-                  fileNames.length > 0 ? fileNames.join(', ') : ''
-                }}</span>
-                <input
-                  class="text-white"
-                  #fileInput
-                  type="file"
-                  (change)="onFilesSelected($event)"
-                  style="display: none;"
-                  class="mt-2"
-                  multiple
+          <div class="mt-3" *ngIf="!editingStates[comment.id!]">
+            <ng-container *ngFor="let url of comment.documentUrls">
+              <div *ngIf="isImage(url)" class="mt-2">
+                <img
+                  [src]="url"
+                  alt="Comment Image"
+                  class="max-w-full h-auto"
                 />
               </div>
-              <ng-container *ngFor="let url of editableDocumentArray">
-                <div *ngIf="isImage(url)" class="mt-2">
-                  <span
-                    (click)="removeDoc(url)"
-                    class="cursor-pointer text-red-500 ml-2"
-                    >Remove image</span
-                  >
-                  <img
-                    [src]="url"
-                    alt="Document Image"
-                    class="max-w-full h-auto"
-                  />
-                </div>
-                <div *ngIf="isPdf(url)" class="mt-2">
-                  <a
-                    [href]="url"
-                    target="_blank"
-                    class="text-blue-500 hover:underline"
-                    >View PDF</a
-                  >
-                  <span
-                    (click)="removeDoc(url)"
-                    class="cursor-pointer text-red-500 ml-2"
-                    >X</span
-                  >
-                </div>
-                <!-- Add more conditions for other document types if needed -->
-                <div *ngIf="!isImage(url) && !isPdf(url)" class="mt-2">
-                  <a
-                    [href]="url"
-                    target="_blank"
-                    class="text-blue-500 hover:underline"
-                    >View Document</a
-                  >
-                  <span
-                    (click)="removeDoc(url)"
-                    class="cursor-pointer text-red-500 ml-2"
-                    >X</span
-                  >
-                </div>
-              </ng-container>
-
-              <div class="flex justify-end mt-2">
-                <app-button
-                  (click)="saveEdit()"
-                  (click)="toggleOptions()"
-                  label="Save"
-                  class="text-white "
+              <div *ngIf="isPdf(url)" class="mt-2">
+                <a
+                  [href]="url"
+                  target="_blank"
+                  class="text-blue-500 hover:underline"
+                  >View PDF</a
                 >
-                  ></app-button
-                >
-                <app-button
-                  label="Cancel"
-                  (click)="cancelEdit()"
-                  (click)="toggleOptions()"
-                  class=" text-white"
-                >
-                </app-button>
               </div>
+              <!-- Add more conditions for other document types if needed -->
+              <div *ngIf="!isImage(url) && !isPdf(url)" class="mt-2">
+                <a
+                  [href]="url"
+                  target="_blank"
+                  class="text-blue-500 hover:underline"
+                  >View Document</a
+                >
+              </div>
+            </ng-container>
+          </div>
+
+          <div class="mt-1" *ngIf="editingStates[comment.id!]">
+            <div
+              contenteditable="true"
+              class="editable-content"
+              style="background-color: #ffffff; border: 1px solid #cccccc; padding: 5px; min-height: 50px;"
+              (input)="onEdit($event)"
+            >
+              {{ editableBody }}
             </div>
+            <div style="display: flex; align-items: center;">
+              <app-button
+                (click)="fileInput.click()"
+                label="Select documents"
+              ></app-button>
+              <span style="color: #555; padding: 10px;">{{
+                fileNames.length > 0 ? fileNames.join(', ') : ''
+              }}</span>
+              <input
+                class="text-white"
+                #fileInput
+                type="file"
+                (change)="onFilesSelected($event)"
+                style="display: none;"
+                class="mt-2"
+                multiple
+              />
+            </div>
+            <ng-container *ngFor="let url of editableDocumentArray">
+              <div *ngIf="isImage(url)" class="mt-2">
+                <span
+                  (click)="removeDoc(url)"
+                  class="cursor-pointer text-red-500 ml-2"
+                  >Remove image</span
+                >
+                <img
+                  [src]="url"
+                  alt="Document Image"
+                  class="max-w-full h-auto"
+                />
+              </div>
+              <div *ngIf="isPdf(url)" class="mt-2">
+                <a
+                  [href]="url"
+                  target="_blank"
+                  class="text-blue-500 hover:underline"
+                  >View PDF</a
+                >
+                <span
+                  (click)="removeDoc(url)"
+                  class="cursor-pointer text-red-500 ml-2"
+                  >X</span
+                >
+              </div>
+              <div *ngIf="!isImage(url) && !isPdf(url)" class="mt-2">
+                <a
+                  [href]="url"
+                  target="_blank"
+                  class="text-blue-500 hover:underline"
+                  >View Document</a
+                >
+                <span
+                  (click)="removeDoc(url)"
+                  class="cursor-pointer text-red-500 ml-2"
+                  >X</span
+                >
+              </div>
+            </ng-container>
+
+            <div class="flex justify-end mt-2">
+              <app-button
+                (click)="saveEdit()"
+                (click)="toggleOptions()"
+                label="Save"
+                class="text-white "
+              >
+                ></app-button
+              >
+              <app-button
+                label="Cancel"
+                (click)="cancelEdit()"
+                (click)="toggleOptions()"
+                class=" text-white"
+              >
+              </app-button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -184,11 +199,14 @@ export class CommentsComponent implements OnInit {
   fileNames: string[] = [];
   files: File[] = [];
   showOptions: boolean = false;
-  constructor(    public auth: AuthService,
+  editingStates: { [commentId: string]: boolean } = {};
+  constructor(
+    public auth: AuthService,
     private router: Router,
     private postService: PostsService,
     private storage: AngularFireStorage,
-    private commentService: CommentService) {}
+    private commentService: CommentService
+  ) {}
 
   ngOnInit(): void {
     this.postService.getCommentsByPostId(this.postId).subscribe((comments) => {
@@ -250,19 +268,24 @@ export class CommentsComponent implements OnInit {
   }
 
   toggleEditMode(commentId: string): void {
-    this.comment = this.getCommentbyCommentId(commentId);
-    this.isEditing = !this.isEditing;
-    if (this.isEditing) {
-      this.editableBody = this.comment.body;
-      this.editableDocumentArray = this.comment.documentUrls
-        ? [...this.comment.documentUrls]
-        : [];
-      console.log(this.editableDocumentArray);
+    const comment = this.comments.find((comment) => comment.id === commentId);
+    if (comment) {
+      this.editingStates[commentId] = !this.editingStates[commentId];
+      this.comment = comment;
+      this.isEditing = this.editingStates[commentId];
+      if (this.isEditing) {
+        this.editableBody = this.comment.body;
+        this.editableDocumentArray = this.comment.documentUrls
+          ? [...this.comment.documentUrls]
+          : [];
+      }
+    } else {
+      console.error('Comment not found');
     }
   }
 
   getCommentbyCommentId(commentId: string): Comment {
-    const c = this.comments.find(x => x.id = commentId)!;
+    const c = this.comments.find((x) => (x.id = commentId))!;
     return c;
   }
 
@@ -276,14 +299,11 @@ export class CommentsComponent implements OnInit {
   }
 
   cancelEdit(): void {
-    this.isEditing = false;
+    this.editingStates[this.comment.id!] = false;
   }
 
   saveEdit(): void {
     if (this.comment.postId && this.editableBody.trim() !== '') {
-      
-
-      // Set the post's documentUrls to the editableDocumentArray
       this.comment.documentUrls = [...this.editableDocumentArray];
 
       if (this.selectedFiles.length > 0) {
@@ -299,7 +319,6 @@ export class CommentsComponent implements OnInit {
   }
 
   updateCommentContent(): void {
-    console.log(this.editableBody);
     this.commentService
       .updateComment(this.comment.id!, {
         body: this.editableBody,
@@ -308,7 +327,7 @@ export class CommentsComponent implements OnInit {
       .then(() => {
         this.comment.body = this.editableBody;
         this.comment.documentUrls = this.editableDocumentArray;
-        this.isEditing = false;
+        this.editingStates[this.comment.id!] = false;
         this.selectedFiles = [];
       })
       .catch((error: any) => console.error('Error updating post:', error));

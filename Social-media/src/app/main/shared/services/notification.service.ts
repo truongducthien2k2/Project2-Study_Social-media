@@ -58,6 +58,24 @@ export class NotificationService {
       return batch.commit();
     });
   }
+  createCommentNotification(postId: string, userIdTo: string, userIdFrom: string): Promise<void> {
+    const notification: Notification = {
+      id: this.afs.createId(), 
+      message: `comment to your post `,
+      userIdTo: userIdTo,
+      userIdFrom: userIdFrom,
+      target: postId,
+      type: 'comment',
+      seen: false,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+    };
+
+    return this.createNotification(notification);
+  }
+
+
+
+
   getUsersFromNotifications(notifications: Notification[]): Observable<User[]> {
     const userIds: string[] = notifications.map(notification => notification.userIdFrom);
     const userObservables: Observable<User | undefined>[] = userIds.map(userId => this.userService.getUser(userId));
