@@ -7,6 +7,7 @@ import { Subscription } from 'rxjs';
 import { ModelService } from '../../shared/services/model.service';
 import { ConfigService } from '../../shared/services/config.service';
 import { Router } from '@angular/router';
+import { NotificationService } from '../../shared/services/notification.service';
 @Component({
   selector: 'app-user-profile',
   templateUrl: './user-profile.component.html',
@@ -30,7 +31,8 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     private config: ConfigService,
     public auth: AuthService,
     public modalService: ModelService,
-    private router: Router
+    private router: Router,
+    public notification: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -100,14 +102,15 @@ export class UserProfileComponent implements OnInit, OnDestroy {
         this.isFollowed = true;
       });
     }
+    this.notification.createfollowNotification('',this.currentUserId,this.auth.loggedInUserId)
   }
   getFollowersUserIds(): void {
     this.subscriptions.push(
       this.userService.getFollowersUserIds(this.currentUserId).subscribe(userIds => {
         this.followersUserIds = userIds;
-
       })
     );
+    
   }
   getFollowingUserIds(): void {
     this.subscriptions.push(
@@ -128,6 +131,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
       this.router.navigate(['/user', this.currentUserId, 'followers'], { queryParams: { followersUserIds: this.followersUserIds.join(',') } });
     }
   }
+  
 
 
 

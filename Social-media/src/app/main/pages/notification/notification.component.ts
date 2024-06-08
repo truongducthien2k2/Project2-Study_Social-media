@@ -20,6 +20,7 @@ export class NotificationComponent implements OnInit {
     private notificationService: NotificationService, private authService: AuthService, private config: ConfigService) { }
 
   ngOnInit() {
+    this.config.updateHeaderSettings('Notifiaction');
     const userId = this.authService.loggedInUserId;
     this.notificationService.getAllNotifications().subscribe(notifications => {
       notifications.forEach(notification => {
@@ -41,7 +42,15 @@ export class NotificationComponent implements OnInit {
   gotouser(id: string) {
     this.router.navigate([`/user/${id}`]);
   }
+  gotopost(id: string) {
+    if (id !== "") {
+      this.router.navigate([`/post/${id}`]);
+    }
+  }
   markAsSeen(notificationId: string) {
     this.notificationService.markAsSeen(notificationId);
+  }
+  deleteNotification(id: string){
+    this.notificationService.deleteNotification(id);
   }
 }

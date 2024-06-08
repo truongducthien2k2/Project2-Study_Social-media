@@ -32,7 +32,7 @@ export class NotificationService {
    createLikeNotification(postId: string, userIdTo: string, userIdFrom: string): Promise<void> {
     const notification: Notification = {
       id: this.afs.createId(), 
-      message: `Your post was liked by `,
+      message: `like your post `,
       userIdTo: userIdTo,
       userIdFrom: userIdFrom,
       target: postId,
@@ -41,6 +41,22 @@ export class NotificationService {
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
     };
 
+    
+    return this.createNotification(notification);
+  }
+  createfollowNotification(postId: string, userIdTo: string, userIdFrom: string): Promise<void> {
+    const notification: Notification = {
+      id: this.afs.createId(), 
+      message: `follow you `,
+      userIdTo: userIdTo,
+      userIdFrom: userIdFrom,
+      target: postId,
+      type: 'follow',
+      seen: false,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+    };
+
+    
     return this.createNotification(notification);
   }
   deleteLikeNotification(postId: string, userIdTo: string, userIdFrom: string): Promise<void> {
@@ -71,6 +87,9 @@ export class NotificationService {
     };
 
     return this.createNotification(notification);
+  }
+  deleteNotification(notificationId: string): Promise<void> {
+    return this.afs.collection('notifications').doc(notificationId).delete();
   }
 
 
