@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { PostsService } from '../../shared/services/posts.service';
 import { ActivatedRoute } from '@angular/router';
 import { ConfigService } from '../../shared/services/config.service';
-
+import { AuthService } from '../../shared/services/auth.service';
+import { NotificationService } from '../../shared/services/notification.service';
 @Component({
   selector: 'app-post',
   template: `
@@ -10,7 +11,12 @@ import { ConfigService } from '../../shared/services/config.service';
       <loader></loader>
     </div>
     <app-post-items *ngIf="post" [post]="post"></app-post-items>
-    <app-form placeholder="Tweet your reply" [postId]="post?.postId" [isComment]="true"></app-form>
+    <app-form 
+      placeholder="Tweet your reply" 
+      [postId]="post?.postId" 
+      [isComment]="true"
+      (uploadClicked)="handleUploadClick()"
+    ></app-form>
     <app-comments *ngIf="post" [postId]="post.postId"></app-comments>
   `,
   styles: [
@@ -20,10 +26,12 @@ export class PostComponent implements OnInit {
   post!: any;
   loading: boolean = true;
 
-  constructor(private postService: PostsService, private activatedRoute: ActivatedRoute, private config: ConfigService) { }
+  constructor(private postService: PostsService, private activatedRoute: ActivatedRoute, private config: ConfigService
+    ,private auth: AuthService, private notification: NotificationService
+  ) { }
 
   ngOnInit(): void {
-    this.config.updateHeaderSettings('Tweet', true)
+    this.config.updateHeaderSettings('Tweet', true);
     const postId = this.activatedRoute.snapshot.paramMap.get('id');
     this.fetchPost(postId);
   }
@@ -31,9 +39,15 @@ export class PostComponent implements OnInit {
   fetchPost(postId: string | null): void {
     if (postId) {
       this.postService.getPost(postId).subscribe(post => {
-        this.post = post
-        this.loading = false
+        this.post = post;
+        this.loading = false;
       });
+    }
+  }
+
+  handleUploadClick(): void {
+    if(this.post.userId != this.post.postId){
+    this.notification.createCommentNotification(this.post.postId,this.post.userId,this.auth.loggedInUserId)
     }
   }
 }

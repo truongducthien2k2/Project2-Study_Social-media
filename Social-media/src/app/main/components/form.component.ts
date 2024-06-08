@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AuthService } from '../shared/services/auth.service';
 import { ModelService } from '../shared/services/model.service';
 import { PostsService } from '../shared/services/posts.service';
@@ -54,6 +54,8 @@ export class FormComponent  implements OnInit, OnDestroy{
   @Input() isComment: boolean = false;
   @Input() postId: string = '';
 
+  @Output() uploadClicked = new EventEmitter<void>();
+
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
   fileNames: string[] = [];
@@ -73,15 +75,14 @@ export class FormComponent  implements OnInit, OnDestroy{
     private userService: UserService,
   ) {
   }
-
   ngOnInit(): void {
     this.getCurrentUserProfileInfo();
-
   }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
+
   getCurrentUserProfileInfo(): void {
     this.subscriptions.push(
       this.userService.getAllUsers().subscribe(users => {
@@ -155,6 +156,8 @@ export class FormComponent  implements OnInit, OnDestroy{
       console.error('Either body or files must be present to tweet.');
       return;
     }
+
+    this.uploadClicked.emit();
 
     this.isLoading = true;
     if (this.files.length > 0) {
