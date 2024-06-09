@@ -14,6 +14,9 @@ const routes: Routes = [
       {
         path: '', component: HomeComponent, pathMatch: 'full'
       },
+      {
+        path: 'admin/:id', component: AdminhomeComponent, pathMatch: 'full'
+      },
       { path: 'notifications', component: NotificationComponent },
       {
         path: 'post/:id', component: PostComponent
