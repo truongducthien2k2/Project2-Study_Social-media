@@ -27,6 +27,8 @@ import { PostComponent } from './components/post/post.component';
 import { SearchComponent } from './pages/search/search.component';
 import { FollowUserComponent } from './components/follow-user/follow-user.component';
 import { NotificationComponent } from './pages/notification/notification.component';
+import { AdminhomeComponent } from './components/adminhome/adminhome.component';
+import { ReportComponent } from './components/report/report.component';
 @NgModule({
   declarations: [
     LayoutComponent,
@@ -52,6 +54,8 @@ import { NotificationComponent } from './pages/notification/notification.compone
     SearchComponent,
     FollowUserComponent,
     NotificationComponent,
+    AdminhomeComponent,
+    ReportComponent,
     
   ],
   imports: [

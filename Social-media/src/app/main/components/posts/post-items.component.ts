@@ -8,6 +8,8 @@ import { finalize, switchMap } from 'rxjs/operators';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { NotificationService } from '../../shared/services/notification.service';
 import { Notification } from '../../interface';
+import { ReportService } from '../../shared/services/report.service';
+import { ModelService } from '../../shared/services/model.service';
 @Component({
   selector: 'app-post-items',
   template: `
@@ -58,6 +60,21 @@ import { Notification } from '../../interface';
                   (click)="deletePost(post.postId!)"
                 >
                   <strong>delete</strong>
+                </span>
+              </div>
+            </ng-container>
+            <ng-container
+              *ngIf="
+                showOptions && post.user?.uid !== auth.loggedInUserId.toString()
+              "
+            >
+              <div class="options">
+                <span
+                  class="material-icons text-blue-500 text-sm cursor-pointer hover:underline"
+                  style="margin-right: 15px; margin-left: 3px;"
+                  (click)="reportPost(post.postId!, auth.loggedInUserId.toString())"
+                >
+                  <strong>report</strong>
                 </span>
               </div>
             </ng-container>
@@ -257,6 +274,9 @@ import { Notification } from '../../interface';
         </div>
       </div>
     </div>
+    <app-report
+    *ngIf="this.modalService.isReportModalOpen">
+    </app-report>
   `,
   styles: [],
 })
@@ -278,7 +298,9 @@ export class PostItemsComponent implements OnInit {
     private router: Router,
     private postService: PostsService,
     private storage: AngularFireStorage,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private reportService: ReportService,
+    public modalService: ModelService,
   ) {}
   toggleLike(event: Event): void {
     event.stopPropagation();
@@ -425,6 +447,16 @@ export class PostItemsComponent implements OnInit {
         this.posts = this.posts.filter((post) => post.postId !== postId);
       })
       .catch((error) => console.error('Error deleting post:', error));
+  }
+
+  reportPost(postId: string, userIdFrom: string): void {
+    this.reportService
+      .createPostReport(postId, userIdFrom)
+      .then(() => {
+        this.posts = this.posts.filter((post) => post.postId !== postId);
+      })
+      .catch((error) => console.error('Error deleting post:', error));
+    this.modalService.isReportModalOpen = true;
   }
 
   goToUser(id: string | undefined): void {

@@ -47,6 +47,7 @@ export class AuthService {
       emailVerified: user.emailVerified,
       username: username || '',
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      role: 'user'
     }
 
     return userRef.set(userData, {

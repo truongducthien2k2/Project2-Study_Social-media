@@ -11,6 +11,7 @@ export class ModelService {
   private _isEditModalOpen: boolean = false;
   private _isFollowModalOpen: boolean = false;
   private _followModalType: 'followers' | 'followings' = 'followers'; // Default to followers
+  private _isReportModalOpen: boolean = false;
 
   constructor() { }
 
@@ -68,5 +69,13 @@ export class ModelService {
 
   set followModalType(value: 'followers' | 'followings') {
     this._followModalType = value;
+  }
+
+  get isReportModalOpen(): boolean {
+    return this._isReportModalOpen;
+  }
+
+  set isReportModalOpen(value: boolean) {
+    this._isReportModalOpen = value;
   }
 }

@@ -14,7 +14,7 @@ export interface User {
     username?: string;
     createdAt: any;
     bio?: string;
-    
+    role: string;
 }
 export interface Post {
     userId: string;
@@ -40,6 +40,15 @@ export interface Notification {
     id: string;
     message: string;
     userIdTo: string;
+    userIdFrom: string;
+    target: string;
+    type: string;
+    seen: boolean;
+    createdAt?: any;
+}
+export interface Report {
+    id: string;
+    message: string;
     userIdFrom: string;
     target: string;
     type: string;

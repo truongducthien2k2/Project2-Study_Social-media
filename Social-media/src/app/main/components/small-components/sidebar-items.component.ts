@@ -9,6 +9,31 @@ import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'sidebar-items',
   template: `
+    <div
+      class="h-full rounded-full h-14 w-14 p-4 flex items-center justify-center hover:bg-opacity-10 hover:bg-blue-300 cursor-pointer transition "
+    >
+      <div class="h-14 w-200" alt="Logo"></div>
+    </div>
+    <ng-container *ngIf="user.getUser(authService.loggedInUserId.toString()).role === 'admin'">
+    <div class="flex flex-row items-center h-full" *ngFor="let item of adminitems" >
+      <a
+        [routerLink]="item.route"
+        [ngClass]="{
+          'text-white': !item.isActive,
+          'text-sky-500': item.isActive
+        }"
+        class="material-icons relative rounded-full h-14 w-14 flex items-center justify-center p-4 hover:bg-slate-300 hover:bg-opacity-10 cursor-pointer"
+      >
+        {{ item.icon }}
+      </a>
+
+      <a
+        [routerLink]="item.route"
+        class="relative hidden lg:flex items-center gap-4 p-4 rounded-full hover:bg-slate-300 hover:bg-opacity-10 cursor-pointer"
+      >
+        <p class="hidden lg:block text-white text-lg">{{ item.lable }}</p>
+      </a>
+    </div>
     <!-- Home/Notifications Button -->
     <div
       class="h-full rounded-full h-14 w-14 p-4 flex items-center justify-center hover:bg-opacity-10 hover:bg-blue-300 cursor-pointer transition "
@@ -122,6 +147,13 @@ export class SidebarItemsComponent implements OnInit, OnDestroy {
     {
       lable: 'Profile',
       route: `/user/${this.authService.loggedInUserId}`,
+      icon: 'person',
+    },
+  ];
+  adminitems: Array<SlidebarItems> = [
+    {
+      lable: 'Admin Home',
+      route: `/admin/${this.authService.loggedInUserId}`,
       icon: 'person',
     },
   ];

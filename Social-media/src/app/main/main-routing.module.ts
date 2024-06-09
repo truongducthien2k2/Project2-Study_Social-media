@@ -6,6 +6,7 @@ import { HomeComponent } from './pages/home/home.component';
 import { PostComponent } from './components/post/post.component';
 import { SearchComponent } from './pages/search/search.component';
 import { NotificationComponent } from './pages/notification/notification.component';
+import { AdminhomeComponent } from './components/adminhome/adminhome.component';
 
 const routes: Routes = [
   {
@@ -22,6 +23,9 @@ const routes: Routes = [
       },
       {
         path: 'search', component: SearchComponent
+      },
+      {
+        path: 'adminhome', component: AdminhomeComponent
       },
     ]
   }
