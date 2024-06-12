@@ -12,7 +12,7 @@ export class ModelService {
   private _isFollowModalOpen: boolean = false;
   private _followModalType: 'followers' | 'followings' = 'followers'; // Default to followers
   private _isReportModalOpen: boolean = false;
-
+  private categoryId: string = '';
   constructor() { }
 
   get isOpen(): boolean {
@@ -77,5 +77,12 @@ export class ModelService {
 
   set isReportModalOpen(value: boolean) {
     this._isReportModalOpen = value;
+  }
+  set setCategoryId(categoryId: string) {
+    this.categoryId = categoryId;
+  }
+
+  get getCategoryId(): string {
+    return this.categoryId;
   }
 }

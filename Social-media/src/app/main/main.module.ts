@@ -30,6 +30,8 @@ import { NotificationComponent } from './pages/notification/notification.compone
 import { AdminhomeComponent } from './components/adminhome/adminhome.component';
 import { ReportComponent } from './components/report/report.component';
 import { RepotformComponent } from './components/repotform/repotform.component';
+import { CategoryComponent } from './pages/category/category.component';
+import { CategoryhomeComponent } from './pages/categoryhome/categoryhome.component';
 @NgModule({
   declarations: [
     LayoutComponent,
@@ -57,7 +59,9 @@ import { RepotformComponent } from './components/repotform/repotform.component';
     NotificationComponent,
     AdminhomeComponent,
     ReportComponent,
-    RepotformComponent
+    RepotformComponent,
+    CategoryComponent,
+    CategoryhomeComponent
   ],
   imports: [
     CommonModule,

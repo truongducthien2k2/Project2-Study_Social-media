@@ -29,7 +29,11 @@ export interface Post {
   tags?: string[];
   type?: string; // Added type property for admin-created types
 }
-
+export interface Category {
+  id: string;
+  name: string;
+  postIds: string[];
+}
 export interface Comment {
   id?: string;
   body: string;

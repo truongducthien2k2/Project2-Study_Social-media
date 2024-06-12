@@ -18,7 +18,7 @@
               </div>
               <div *ngIf="report.type === 'user'" class="w-full flex items-center bg-gray-800 p-4 rounded-lg shadow-lg mb-2">
                 <img [src]="users[report.userIdFrom].photoURL" alt="Profile Picture" class="w-16 h-16 rounded-full object-cover" >
-                <div class="ml-4 flex-col" (click)="gotopost(report.target)">
+                <div class="ml-4 flex-col" (click)="gotouser(report.target)">
                   <p class="text-white text-lg font-semibold">{{ report.message }}</p>
                   <p class="text-gray-400 text-sm">{{ report.createdAt?.toDate() | dateAgo }}</p>
                 </div>

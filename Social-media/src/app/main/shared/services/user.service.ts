@@ -89,12 +89,4 @@ export class UserService {
   getUser(userId: string): Observable<User | undefined> {
     return this.afs.collection<User>('users').doc(userId).valueChanges();
   }
-  getUsersCreatedThisWeek(): Observable<User[]> {
-    const lastWeekDate = new Date();
-    lastWeekDate.setDate(lastWeekDate.getDate() - 7);
-
-    return this.afs.collection<User>('users', ref =>
-      ref.where('createdAt', '>=', lastWeekDate)
-    ).valueChanges();
-  }
 }
