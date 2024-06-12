@@ -8,6 +8,7 @@ import { ModelService } from '../../shared/services/model.service';
 import { ConfigService } from '../../shared/services/config.service';
 import { Router } from '@angular/router';
 import { NotificationService } from '../../shared/services/notification.service';
+
 @Component({
   selector: 'app-user-profile',
   templateUrl: './user-profile.component.html',
@@ -23,6 +24,8 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   isAdmin: boolean = false;
   @Input() followersUserIds: string[] = [];
   @Input() followingUserIds: string[] = [];
+  @Input() userID: string = '';
+  @Input() rpuserIDs: string = ''; // Add rpuserIDs input
   private subscriptions: Subscription[] = [];
 
   constructor(
@@ -58,6 +61,11 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
+  reportUser(): void {
+    this.rpuserIDs = this.user.uid
+    this.modalService.isReportModalOpen = true;
+  }
+
   getCurrentUserProfileInfo(): void {
     this.subscriptions.push(
       this.userService.getAllUsers().subscribe(users => {
@@ -84,9 +92,6 @@ export class UserProfileComponent implements OnInit, OnDestroy {
       })
     );
   }
-  showFollowers(): void{
-    
-  }
 
   toggleFollow(): void {
     if (!this.auth.isLoggedIn) {
@@ -104,22 +109,23 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     }
     this.notification.createfollowNotification('',this.currentUserId,this.auth.loggedInUserId)
   }
+
   getFollowersUserIds(): void {
     this.subscriptions.push(
       this.userService.getFollowersUserIds(this.currentUserId).subscribe(userIds => {
         this.followersUserIds = userIds;
       })
     );
-    
   }
+
   getFollowingUserIds(): void {
     this.subscriptions.push(
       this.userService.getFollowingUserIds(this.currentUserId).subscribe(userIds => {
         this.followingUserIds = userIds;
-
       })
     );
   }
+
   goToFollowing() {
     if (this.followingUserIds.length > 0) {
       this.router.navigate(['/user', this.currentUserId, 'following'], { queryParams: { followingUserIds: this.followingUserIds.join(',') } });
@@ -131,15 +137,12 @@ export class UserProfileComponent implements OnInit, OnDestroy {
       this.router.navigate(['/user', this.currentUserId, 'followers'], { queryParams: { followersUserIds: this.followersUserIds.join(',') } });
     }
   }
-  
-
-
 
   edit() {
     this.modalService.isEditModalOpen = true;
   }
+
   follow(type: 'followers' | 'followings'): void {
-    // Set the followModalType before opening the modal
     this.modalService.followModalType = type;
     this.modalService.isFollowModalOpen = true;
   }

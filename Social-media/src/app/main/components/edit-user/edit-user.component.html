@@ -26,13 +26,13 @@
       <div class="form-wrapper">
         <textarea [ngClass]="getInputClasses('bio')" placeholder="Bio" formControlName="bio"></textarea>
       </div>
-      <div class="form-wrapper">
-        <div class="file-input-wrapper" (click)="fileInput.click()">
-          <span style="color: #555; padding: 10px;">Click to upload a profile picture</span>
+        <div class="form-wrapper">
+          <div class="file-input-wrapper" (click)="fileInput.click()">
+            <span style="color: #555; padding: 10px;">Click to upload a profile picture</span>
+          </div>
+          <input #fileInput type="file" (change)="onFileSelected($event)" style="display: none;" />
+          <Avatar [photoURL]="editProfile.get('photoURL')?.value" [isLarge]="true" [hasBorder]="true"></Avatar>
         </div>
-        <input #fileInput type="file" (change)="onFileSelected($event)" style="display: none;" />
-        <Avatar [photoURL]="editProfile.get('photoURL')?.value" [isLarge]="true" [hasBorder]="true"></Avatar>
-      </div>
     </div>
   </form>
 </Modal>

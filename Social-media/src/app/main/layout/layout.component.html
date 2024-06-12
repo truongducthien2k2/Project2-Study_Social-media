@@ -1,15 +1,15 @@
 <div class=" bg-black h-screen">
   <div class="bg-black h-auto mx-auto xl:px-30 ">
     <div class="grid grid-cols-4 h-auto">
-      <app-slidebar></app-slidebar>             
-      <div class="col-span-3 lg:col-span-2 border-x-[1px] border-white">
+      <app-slidebar ></app-slidebar>             
+      <div class="col-span-3 lg:col-span-2">
         <!-- Header -->
         <app-header    [title]="config.headerTitle"
                        [showBackArrow]="config.showBackArrow"> </app-header>
         <router-outlet></router-outlet>
       </div>
       <!-- Follow Bar -->
-      <app-follow-bar></app-follow-bar>
+      <app-follow-bar class="" ></app-follow-bar>
     </div>
   </div>
 </div>

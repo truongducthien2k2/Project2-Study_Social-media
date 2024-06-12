@@ -4,9 +4,10 @@ import { User } from '../../interface';
 import { UserService } from '../../shared/services/user.service';
 import { ModelService } from '../../shared/services/model.service';
 import { AngularFireStorage } from '@angular/fire/storage';
-import { finalize } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { ConfigService } from '../../shared/services/config.service';
+import { ReportService } from '../../shared/services/report.service'; // Add this import
+import { AuthService } from '../../shared/services/auth.service';
 
 @Component({
   selector: 'app-report',
@@ -14,52 +15,45 @@ import { ConfigService } from '../../shared/services/config.service';
   styleUrls: ['./report.component.scss']
 })
 export class ReportComponent implements OnInit, OnDestroy {
-  editProfile!: FormGroup;
-  @Input() followersUserIds: string[] = [];
-  @Input() followingUserIds: string[] = [];
+  reportForm!: FormGroup; // Change to reportForm
+  @Input() rpuserIDs: string = ''; 
   currentUserId: string = '';
   private subscriptions: Subscription[] = [];
-  followers: User[] = [];
-  followings: User[] = [];
+
   constructor(
     public modalService: ModelService,
     private fb: FormBuilder,
     public userService: UserService,
-    private storage: AngularFireStorage
+    private storage: AngularFireStorage,
+    private reportService: ReportService,
+    private auth: AuthService // Inject ReportService
   ) {
-    this.editProfile = this.fb.group({
-      name: ['', Validators.required],
+    this.reportForm = this.fb.group({
+      message: ['', Validators.required], // Add message field
     });
   }
 
   ngOnInit(): void {
-    this.loadFollowers();
+    console.log(1, this.rpuserIDs)
   }
 
   ngOnDestroy(): void {
-    // Unsubscribe from all subscriptions to avoid memory leaks
     this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 
-  loadFollowers(): void {
-    const userIds = this.modalService.followModalType === 'followers' ? this.followersUserIds : this.followingUserIds;
-    const uniqueUids = new Set<string>();
-  
-    userIds.forEach((userId) => {
-      const sub = this.userService.getUser(userId).subscribe((user) => {
-        if (user && !uniqueUids.has(user.uid)) {
-          this.followers.push(user);
-          uniqueUids.add(user.uid);
-        }
+  submitReport(): void {
+    const message = this.reportForm.value.message;
+    this.reportService.createUserReport(this.rpuserIDs,this.auth.loggedInUserId , message)
+      .then(() => {
+        console.log('Report submitted successfully');
+        this.modalService.isReportModalOpen = false; 
+      })
+      .catch(error => {
+        console.error('Error submitting report:', error);
       });
-      this.subscriptions.push(sub);
-    });
   }
-  
 
-  // Hàm để trả về các classes CSS dựa trên trạng thái của người dùng
   getInputClasses(fieldName: string, followId: string): any {
-    const isFollowing = this.followersUserIds.includes(followId);
     return {
       'w-full': true,
       'p-4': true,
@@ -71,10 +65,6 @@ export class ReportComponent implements OnInit, OnDestroy {
       'outline-none': true,
       'text-white': true,
       'focus:border-sky-500': true,
-      'focus:border-red-500':
-        isFollowing &&
-        this.editProfile.get(fieldName)?.invalid &&
-        this.editProfile.get(fieldName)?.touched,
       'focus:border-2': true,
       transition: true,
       'disabled:bg-neutral-900': true,

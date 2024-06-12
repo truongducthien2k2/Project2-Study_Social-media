@@ -10,11 +10,11 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
       [ngClass]="{
         'w-full': fullWidth,
         'w-fit': !fullWidth,
-        'bg-white text-black border-black': secondary,
-        'bg-sky-500 text-white border-sky-500': !secondary,
+        'bg-white text-black border border-0 border-black': secondary,
+        'bg-sky-500 text-white border border-sky-500': !secondary,
         'text-xl px-5 py-3': large,
         'text-md px-4 py-2': !large,
-        'bg-transparent border-white': outline
+        'bg-transparent border border-white': outline
       }"
       class="disabled:opacity-70 disabled:cursor-not-allowed rounded-full font-semibold hover:opacity-80 transition border-2">
       {{label}}

@@ -1,6 +1,12 @@
-<Modal [isOpen]="true"
-(onClose)="modalService.isReportModalOpen = false">
+<Modal [isOpen]="true" (onClose)="modalService.isReportModalOpen = false">
     <div class="p-4">
-        Report
+      <form [formGroup]="reportForm" (ngSubmit)="submitReport()">
+        <div class="mb-4">
+          <label for="message" class="block text-white text-sm font-bold mb-2">Message</label>
+          <textarea id="message" formControlName="message" rows="4" class="w-full p-4 text-lg bg-black border-2 border-neutral-800 rounded-md outline-none text-white focus:border-sky-500 focus:border-2 transition disabled:bg-neutral-900 disabled:opacity-70 disabled:cursor-not-allowed"></textarea>
+        </div>
+        <button type="submit" [disabled]="reportForm.invalid" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Save</button>
+      </form>
     </div>
-</Modal>
+  </Modal>
+  

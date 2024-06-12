@@ -1,0 +1,45 @@
+
+
+
+
+<div (onClose)="gohome()">
+    <div class="p-4">
+      <form>
+        <div class="flex flex-col items-center gap-4 w-full">
+          <ng-container *ngFor="let report of reports">
+            <ng-container *ngIf="!report.seen">
+              <div *ngIf="report.type === 'post'"class="w-full flex items-center bg-gray-800 p-4 rounded-lg shadow-lg mb-2">
+            
+                <div class="ml-4 flex-col" (click)="gotopost(report.target)">
+                  <p class="text-white text-lg font-semibold">{{ users[report.userIdFrom].username + " " + report.message }}</p>
+                  <p class="text-gray-400 text-sm">{{ report.createdAt?.toDate() | dateAgo }}</p>
+                </div>
+                <button (click)="deleteReport(report.id)" style="margin-left: 50px;" class="text-red-600">X</button>
+              </div>
+              <div *ngIf="report.type === 'user'" class="w-full flex items-center bg-gray-800 p-4 rounded-lg shadow-lg mb-2">
+                <img [src]="users[report.userIdFrom].photoURL" alt="Profile Picture" class="w-16 h-16 rounded-full object-cover" >
+                <div class="ml-4 flex-col" (click)="gotopost(report.target)">
+                  <p class="text-white text-lg font-semibold">{{ report.message }}</p>
+                  <p class="text-gray-400 text-sm">{{ report.createdAt?.toDate() | dateAgo }}</p>
+                </div>
+                <button (click)="deleteReport(report.id)" style="margin-left: 50px;" class="text-red-600">X</button>
+              </div>
+            </ng-container>
+          </ng-container>
+          <!-- Display seen reports -->
+          <ng-container *ngFor="let report of reports">
+            <ng-container *ngIf="report.seen">
+              <div class="w-full flex items-center bg-black p-4 rounded-lg shadow-lg mb-2">
+                <img  [src]="users[report.userIdFrom].photoURL" alt="Profile Picture" class="w-16 h-16 rounded-full object-cover">
+                <div class="ml-4 flex-col" (click)="gotopost(report.target)">
+                  <p class="text-white text-lg font-semibold">{{ users[report.userIdFrom].username + " " + report.message }}</p>
+                </div>
+                <p class="text-gray-400 text-sm ml-4">{{ report.createdAt?.toDate() | dateAgo }}</p>
+                <button (click)="deleteReport(report.id)" style="margin-left: 50px;" class="ml-4 text-red-600">X</button>
+              </div>
+            </ng-container>
+          </ng-container>
+        </div>
+      </form>
+    </div>
+  </div>

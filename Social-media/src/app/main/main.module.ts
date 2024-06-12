@@ -29,6 +29,7 @@ import { FollowUserComponent } from './components/follow-user/follow-user.compon
 import { NotificationComponent } from './pages/notification/notification.component';
 import { AdminhomeComponent } from './components/adminhome/adminhome.component';
 import { ReportComponent } from './components/report/report.component';
+import { RepotformComponent } from './components/repotform/repotform.component';
 @NgModule({
   declarations: [
     LayoutComponent,
@@ -56,7 +57,7 @@ import { ReportComponent } from './components/report/report.component';
     NotificationComponent,
     AdminhomeComponent,
     ReportComponent,
-    
+    RepotformComponent
   ],
   imports: [
     CommonModule,

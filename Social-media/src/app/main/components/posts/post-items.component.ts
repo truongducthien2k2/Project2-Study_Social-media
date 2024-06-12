@@ -14,7 +14,7 @@ import { ModelService } from '../../shared/services/model.service';
   selector: 'app-post-items',
   template: `
     <div
-      class="border-b-[1px] border-neutral-800 p-5 cursor-pointer hover:bg-neutral-900 transition"
+      class="border-0 border-neutral-600 p-5 cursor-pointer hover:bg-neutral-900 transition"
     >
       <div class="flex flex-row items-start gap-3">
         <Avatar
@@ -91,8 +91,8 @@ import { ModelService } from '../../shared/services/model.service';
           <div *ngIf="isEditing" class="mt-1">
             <div
               contenteditable="true"
-              class="editable-content"
-              style="background-color: #ffffff; border: 1px solid #cccccc; padding: 5px; min-height: 50px;"
+              class="editable-content "
+              style="background-color: #ffffff; padding: 5px; min-height: 50px;"
               (input)="onEdit($event)"
             >
               {{ editableBody }}
@@ -101,7 +101,7 @@ import { ModelService } from '../../shared/services/model.service';
               type="text"
               [(ngModel)]="newTag"
               (keydown.enter)="addTag()"
-              class="mt-2 w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+              class="mt-2 w-full px-3 py-1 border border-0 border-neutral-600 rounded-md focus:outline-none focus:border-blue-500"
               placeholder="Add new tag"
             />
             <ng-container

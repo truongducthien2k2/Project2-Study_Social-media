@@ -7,7 +7,7 @@ import { PostComponent } from './components/post/post.component';
 import { SearchComponent } from './pages/search/search.component';
 import { NotificationComponent } from './pages/notification/notification.component';
 import { AdminhomeComponent } from './components/adminhome/adminhome.component';
-
+import { RepotformComponent } from './components/repotform/repotform.component';
 const routes: Routes = [
   {
     path: '' , component:LayoutComponent, children : [
@@ -29,6 +29,9 @@ const routes: Routes = [
       },
       {
         path: 'adminhome', component: AdminhomeComponent
+      },
+      {
+        path: 'reportform', component: RepotformComponent
       },
     ]
   }

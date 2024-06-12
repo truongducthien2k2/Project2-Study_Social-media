@@ -20,7 +20,7 @@ export class NotificationComponent implements OnInit {
     private notificationService: NotificationService, private authService: AuthService, private config: ConfigService) { }
 
   ngOnInit() {
-    this.config.updateHeaderSettings('Notifiaction');
+    this.config.updateHeaderSettings('Notification');
     const userId = this.authService.loggedInUserId;
     this.notificationService.getAllNotifications().subscribe(notifications => {
       notifications.forEach(notification => {

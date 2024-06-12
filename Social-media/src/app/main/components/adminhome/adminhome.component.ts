@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ConfigService } from '../../shared/services/config.service';
 
 @Component({
@@ -8,10 +9,13 @@ import { ConfigService } from '../../shared/services/config.service';
 })
 export class AdminhomeComponent implements OnInit {
 
-  constructor(private config: ConfigService) { }
+  constructor(private config: ConfigService, private router: Router, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
-    this.config.updateHeaderSettings('Admin Home')
+    this.config.updateHeaderSettings('Admin Home');
   }
 
+  navigateToReportForm(): void {
+    this.router.navigate(['/reportform'])
+  }
 }

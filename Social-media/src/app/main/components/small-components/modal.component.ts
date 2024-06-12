@@ -25,6 +25,7 @@ import { Component, EventEmitter, Input, Output, TemplateRef } from '@angular/co
           <div class="
             h-full
             lg:h-auto
+            border
             border-0
             rounded-lg
             shadow-lg
@@ -54,7 +55,7 @@ import { Component, EventEmitter, Input, Output, TemplateRef } from '@angular/co
                 class="
                   p-1
                   ml-auto
-                  border-0
+                 border border-0 border-neutral-600
                   text-white
                   hover:opacity-70
                   transition

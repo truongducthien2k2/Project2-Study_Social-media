@@ -12,7 +12,7 @@ import { CommentService } from '../../shared/services/comment.service';
   selector: 'app-comments',
   template: `
     <div
-      class="border-b-[1px] border-neutral-800 p-5 cursor-pointer hover:bg-neutral-900 transition"
+      class="  p-5 cursor-pointer hover:bg-neutral-900 transition"
       *ngFor="let comment of comments"
     >
       <div class="flex flex-row items-start gap-3">
@@ -100,7 +100,7 @@ import { CommentService } from '../../shared/services/comment.service';
             <div
               contenteditable="true"
               class="editable-content"
-              style="background-color: #ffffff; border: 1px solid #cccccc; padding: 5px; min-height: 50px;"
+              style="background-color: #ffffff;solid #cccccc; padding: 5px; min-height: 50px;"
               (input)="onEdit($event)"
             >
               {{ editableBody }}

@@ -13,7 +13,7 @@ import { UserService } from '../shared/services/user.service';
   selector: 'app-form',
   template: `
     <!-- Guest User -->
-    <div class="border-b-[1px] border-neutral-800 px-5 py-2">
+    <div class=" px-5 py-2" style="">
       <div class="py-8" *ngIf="!auth.loggedInUserId && user">
         <h1 class="text-white text-2xl text-center mb-4 font-bold">Welcome to Twitter</h1>
         <div class="flex flex-row items-center justify-center gap-4">
@@ -32,7 +32,7 @@ import { UserService } from '../shared/services/user.service';
         #ctrl="ngModel"
           class="disabled:opacity-80 peer resize-none mt-3 w-full bg-black ring-0 outline-none text-[20px] placeholder-neutral-500 text-white"
           [placeholder]="placeholder"></textarea>
-        <hr class="opacity-0 peer-focus:opacity-100 h-[1px] w-full border-neutral-800 transition" />
+        <hr class="opacity-0 peer-focus:opacity-100 h-[1px] w-full border border-0 border-neutral-600 transition" />
         <div class="mt-4 flex flex-row justify-end">
           <div style="display: flex; align-items: center;">
             <app-button (click)="fileInput.click()" label="Select" ></app-button>
