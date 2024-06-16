@@ -21,7 +21,7 @@ export class PostsComponent implements OnInit, OnDestroy {
   posts: Post[] = [];
   subscription!: Subscription;
   userId: string = '';
-
+  categoryId!: string;
   constructor(
     private postService: PostsService,
     private activatedRoute: ActivatedRoute
@@ -36,12 +36,18 @@ export class PostsComponent implements OnInit, OnDestroy {
         console.log(this.userId)
       }
     );
-
+    const id = this.activatedRoute.snapshot.paramMap.get('categoryid');
+    if (id) {
+      this.categoryId = id;
+    } else {
+      console.error('Category ID is null');
+    }
+    console.log(this.categoryId)
   }
 
   private async getPosts(): Promise<void> {
     this.posts = [];
-    this.subscription = await this.postService.getPostsbyday(this.userId).subscribe(
+    this.subscription = await this.postService.getPostsByType(this.categoryId).subscribe(
       (posts) => {
         this.posts = posts;
         this.loading = false;

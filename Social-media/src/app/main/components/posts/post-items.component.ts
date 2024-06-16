@@ -293,7 +293,7 @@ export class PostItemsComponent implements OnInit {
   fileNames: string[] = [];
   files: File[] = [];
   showOptions: boolean = false;
-  categoryId!: string;
+ 
   constructor(
     public auth: AuthService,
     private router: Router,
@@ -345,13 +345,7 @@ export class PostItemsComponent implements OnInit {
     this.showOptions = !this.showOptions;
   }
   ngOnInit(): void {
-    const id = this.activatedRoute.snapshot.paramMap.get('categoryid');
-    if (id) {
-      this.categoryId = id;
-    } else {
-      console.error('Category ID is null');
-    }
-    console.log(this.categoryId)
+  
   }
 
   removeDoc(doc: string): void {
