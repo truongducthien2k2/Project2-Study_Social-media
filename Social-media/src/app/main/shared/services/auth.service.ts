@@ -3,6 +3,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { User } from '../../interface';
+import { UserService } from './user.service';
 import firebase from 'firebase/app'
 import 'firebase/firestore'
 
@@ -11,10 +12,9 @@ import 'firebase/firestore'
   providedIn: 'root'
 })
 export class AuthService {
-
   userData: Subject<any> = new BehaviorSubject<any>(null);
 
-  constructor(private afAuth: AngularFireAuth, private afs: AngularFirestore) {
+  constructor(private afAuth: AngularFireAuth, private afs: AngularFirestore, private userService: UserService) {
     this.afAuth.authState.subscribe(async (user) => {
       if(user) {
         this.userData.next(user);
@@ -27,9 +27,18 @@ export class AuthService {
   }
 
   async login(email: string, password: string): Promise<any> {
-    await this.afAuth.signInWithEmailAndPassword(email, password);
+    var userId = await this.getUserIdByEmail(email);
+    if (userId != null){
+      var isBan = await this.isUserBanned(userId);
+      {
+        if (isBan == false){
+          await this.afAuth.signInWithEmailAndPassword(email, password);
+        }
+      }
+    }
     window.location.reload();
   }
+
   register(user: any): Promise<any> {
     return this.afAuth.createUserWithEmailAndPassword(user.email, user.password).then((res) => {
       this.setUserData(res.user, user.name, user.username)
@@ -47,13 +56,15 @@ export class AuthService {
       emailVerified: user.emailVerified,
       username: username || '',
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      role: 'user'
+      role: 'user',
+      isBan: false,
     }
 
     return userRef.set(userData, {
       merge: true
     })
   }
+
   async getUserIdByEmail(email: string): Promise<string | null> {
     const usersRef = this.afs.collection('users', ref => ref.where('email', '==', email));
     const snapshot = await usersRef.get().toPromise();
@@ -63,6 +74,18 @@ export class AuthService {
     }
     return null;
   }
+
+  async isUserBanned(uid: string): Promise<boolean> {
+    const userRef = await this.afs.collection('users').doc(uid);
+    const doc = await userRef.get().toPromise();
+    if (doc.exists) {
+      const userData = doc.data() as User;
+      console.log(userData);
+      return userData.isBan;
+    }
+    return false;
+  }
+
   async signOut(): Promise<void> {
     await this.afAuth.signOut().then(async (res) => {
       await localStorage.removeItem('user');

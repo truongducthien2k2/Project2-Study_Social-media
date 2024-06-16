@@ -22,6 +22,8 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   currentUserId: string = '';
   loading: boolean = false;
   isAdmin: boolean = false;
+  adminrole: boolean = false;
+  isBan: boolean = false;
   @Input() followersUserIds: string[] = [];
   @Input() followingUserIds: string[] = [];
   @Input() userID: string = '';
@@ -43,6 +45,24 @@ export class UserProfileComponent implements OnInit, OnDestroy {
       this.activatedRoute.paramMap.subscribe((params: ParamMap) => {
         this.currentUserId = params.get('id') || '';
         this.isAdmin = this.currentUserId === this.auth.loggedInUserId;
+        const loggedUser = this.userService.getUser(this.auth.loggedInUserId).subscribe((user) => {
+          if (user) {
+            // Initialize the parameter with the user data
+            const userParam: User = user;
+            this.adminrole = (user.role == "admin");
+          } else {
+            console.error('User not found');
+          }
+        });
+        const currentUser = this.userService.getUser(this.currentUserId).subscribe((user) => {
+          if (user) {
+            // Initialize the parameter with the user data
+            const userParam: User = user;
+            this.isBan = user.isBan;
+          } else {
+            console.error('User not found');
+          }
+        });
         this.getCurrentUserProfileInfo();
         this.getFollowers();
         this.getFollowing();
@@ -146,4 +166,12 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     this.modalService.followModalType = type;
     this.modalService.isFollowModalOpen = true;
   }
+
+  async ban() {
+   await this.userService.updatebanUser(this.currentUserId, true).catch();
+  }
+
+  async unBan() {
+    await this.userService.updatebanUser(this.currentUserId, false).catch();
+   }
 }

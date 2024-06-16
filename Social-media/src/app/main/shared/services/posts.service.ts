@@ -157,7 +157,7 @@ export class PostsService {
   }
   getPostsByType(type: string): Observable<Post[]> {
     return combineLatest([
-      this.afs.collection<Post>('posts', ref => ref.where('type', '==', type)).valueChanges({ idField: 'postId' }),
+      this.afs.collection<Post>('posts', ref => ref.where('type', '==', type).orderBy('createdAt', 'desc')).valueChanges({ idField: 'postId' }),
       this.afs.collection<User>('users').valueChanges({ idField: 'userId' }),
     ]).pipe(
       switchMap(([posts, users]) => {

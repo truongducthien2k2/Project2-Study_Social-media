@@ -28,34 +28,44 @@ export class PostsComponent implements OnInit, OnDestroy {
   ) {}
 
   async ngOnInit(): Promise<void> {
+    const id = this.activatedRoute.snapshot.paramMap.get('categoryid');
+    if (id) {
+      this.categoryId = id;
+    } else {
+    }
     this.subscription = await this.activatedRoute.paramMap?.subscribe(
       (params: ParamMap) => {
         this.userId = params.get('id') || '';
         this.loading = true;
         this.getPosts();
-        console.log(this.userId)
       }
     );
-    const id = this.activatedRoute.snapshot.paramMap.get('categoryid');
-    if (id) {
-      this.categoryId = id;
-    } else {
-      console.error('Category ID is null');
-    }
-    console.log(this.categoryId)
   }
 
   private async getPosts(): Promise<void> {
     this.posts = [];
-    this.subscription = await this.postService.getPostsByType(this.categoryId).subscribe(
-      (posts) => {
-        this.posts = posts;
-        this.loading = false;
-      },
-      (err) => {
-        this.loading = false;
-      }
-    );
+    if (this.categoryId != null){
+      this.subscription = await this.postService.getPostsByType(this.categoryId).subscribe(
+        (posts) => {
+          this.posts = posts;
+          this.loading = false;
+        },
+        (err) => {
+          this.loading = false;
+        }
+      );
+    }
+    else {
+      this.subscription = await this.postService.getPostsbyday(this.categoryId).subscribe(
+        (posts) => {
+          this.posts = posts;
+          this.loading = false;
+        },
+        (err) => {
+          this.loading = false;
+        }
+      );
+    }
   }
 
   ngOnDestroy(): void {

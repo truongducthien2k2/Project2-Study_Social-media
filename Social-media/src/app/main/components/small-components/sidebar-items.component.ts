@@ -185,6 +185,7 @@ export class SidebarItemsComponent implements OnInit, OnDestroy {
 
   signOut() {
     this.authService.signOut();
+    window.location.reload();
   }
 
   ngOnDestroy(): void {

@@ -81,9 +81,7 @@ export class FormComponent  implements OnInit, OnDestroy{
     if (id) {
       this.categoryId = id;
     } else {
-      console.error('Category ID is null');
     }
-    console.log(this.categoryId)
   }
 
   ngOnDestroy(): void {

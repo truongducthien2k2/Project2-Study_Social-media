@@ -89,4 +89,10 @@ export class UserService {
   getUser(userId: string): Observable<User | undefined> {
     return this.afs.collection<User>('users').doc(userId).valueChanges();
   }
+
+  updatebanUser(id: string, ban: boolean): Promise<any> {
+    return this.afs.collection('users').doc(id).update({
+      isBan: ban
+    });
+  }
 }

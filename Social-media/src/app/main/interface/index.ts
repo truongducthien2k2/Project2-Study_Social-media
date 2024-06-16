@@ -15,6 +15,7 @@ export interface User {
   createdAt: any;
   bio?: string;
   role: 'admin' | 'user'; // Added role property
+  isBan: boolean;
 }
 
 export interface Post {
