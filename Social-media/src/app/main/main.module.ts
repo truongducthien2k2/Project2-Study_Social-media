@@ -32,6 +32,8 @@ import { ReportComponent } from './components/report/report.component';
 import { RepotformComponent } from './components/repotform/repotform.component';
 import { CategoryComponent } from './pages/category/category.component';
 import { CategoryhomeComponent } from './pages/categoryhome/categoryhome.component';
+import { ChartModule } from 'angular-highcharts';
+import { ChartComponent } from './components/chart/chart.component';
 @NgModule({
   declarations: [
     LayoutComponent,
@@ -61,14 +63,15 @@ import { CategoryhomeComponent } from './pages/categoryhome/categoryhome.compone
     ReportComponent,
     RepotformComponent,
     CategoryComponent,
-    CategoryhomeComponent
+    CategoryhomeComponent,
+    ChartComponent
   ],
   imports: [
     CommonModule,
     MainRoutingModule,
     ReactiveFormsModule,
-    FormsModule, 
-    
+    FormsModule,
+    ChartModule
   ]
 })
 export class MainModule { }
