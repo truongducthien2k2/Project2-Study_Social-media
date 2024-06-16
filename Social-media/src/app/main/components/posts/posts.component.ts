@@ -33,8 +33,10 @@ export class PostsComponent implements OnInit, OnDestroy {
         this.userId = params.get('id') || '';
         this.loading = true;
         this.getPosts();
+        console.log(this.userId)
       }
     );
+
   }
 
   private async getPosts(): Promise<void> {

@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CategoryService } from '../../shared/services/catetgory.service';
-import  { Category} from '../../interface'
-import { Router } from '@angular/router'; 
+import { Category } from '../../interface';
+import { Router } from '@angular/router';
 import { ConfigService } from '../../shared/services/config.service';
 import { ModelService } from '../../shared/services/model.service';
+
 @Component({
   selector: 'app-category',
   templateUrl: './category.component.html',
@@ -13,24 +14,25 @@ export class CategoryComponent implements OnInit {
   categories: Category[] = [];
   showModal: boolean = false;
   newCategoryName: string = '';
+
   constructor(private modal: ModelService, private categoryService: CategoryService, private router: Router, private config: ConfigService) { }
 
   ngOnInit(): void {
-    this.config.updateHeaderSettings('Category')
+    this.config.updateHeaderSettings('Category');
     this.categoryService.getCategories().subscribe(categories => {
       this.categories = categories;
     });
   }
+
   openAddCategoryModal(): void {
     this.showModal = true;
   }
+
   closeAddCategoryModal(): void {
     this.showModal = false;
     this.newCategoryName = '';
   }
-  gotocategoryhome(): void {
 
-  }
   addCategory(): void {
     if (this.newCategoryName.trim()) {
       this.categoryService.addCategory(this.newCategoryName).then(() => {
@@ -41,6 +43,7 @@ export class CategoryComponent implements OnInit {
       });
     }
   }
+
   deleteCategory(categoryId: string): void {
     this.categoryService.deleteCategory(categoryId).then(() => {
       console.log('Category deleted successfully');
@@ -48,8 +51,8 @@ export class CategoryComponent implements OnInit {
       console.error('Error deleting category:', error);
     });
   }
-  navigateToCategoryPage(categoryId: string): void {
 
-    this.router.navigate(['/categoryhome', categoryId]);
+  navigateToCategoryPage(categoryId: string): void {
+    this.router.navigate([`/categoryhome/${categoryId}`]);
   }
 }

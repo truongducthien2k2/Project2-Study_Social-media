@@ -64,7 +64,7 @@ export class FormComponent  implements OnInit, OnDestroy{
   user?: User;
   loading: boolean = false;
   isAdmin: boolean = false;
-
+  categoryId!: string;
   private subscriptions: Subscription[] = [];
   constructor(
     public auth: AuthService,
@@ -77,6 +77,13 @@ export class FormComponent  implements OnInit, OnDestroy{
   }
   ngOnInit(): void {
     this.getCurrentUserProfileInfo();
+    const id = this.activatedRoute.snapshot.paramMap.get('categoryid');
+    if (id) {
+      this.categoryId = id;
+    } else {
+      console.error('Category ID is null');
+    }
+    console.log(this.categoryId)
   }
 
   ngOnDestroy(): void {
@@ -124,17 +131,35 @@ export class FormComponent  implements OnInit, OnDestroy{
     );
   }
 
+  tweet(): void {
+    if (!(this.body.length || this.files.length)) {
+      console.error('Either body or files must be present to tweet.');
+      return;
+    }
+  
+    this.uploadClicked.emit();
+  
+    this.isLoading = true;
+    if (this.files.length > 0) {
+      this.uploadFiles().subscribe((urls: string[]) => {
+        this.savePostOrComment(urls);
+      });
+    } else {
+      this.savePostOrComment();
+    }
+  }
+  
   savePostOrComment(documentUrls: string[] = []) {
     const body: Post | Comment = {
       body: this.body,
       userId: this.auth.loggedInUserId,
       createdAt: new Date(),
     };
-
+  
     if (documentUrls.length > 0) {
       (body as Post).documentUrls = documentUrls;
     }
-
+  
     if (this.isComment) {
       (body as Comment).postId = this.postId;
       this.postService.saveComment(body as Comment).then(() => {
@@ -143,29 +168,11 @@ export class FormComponent  implements OnInit, OnDestroy{
         this.isLoading = false;
       });
     } else {
-      this.postService.savePost(body as Post).then(() => {
+      this.postService.savePost(body as Post, this.categoryId).then(() => {
         this.resetForm();
       }).catch(() => {
         this.isLoading = false;
       });
-    }
-  }
-
-  tweet(): void {
-    if (!(this.body.length || this.files.length)) {
-      console.error('Either body or files must be present to tweet.');
-      return;
-    }
-
-    this.uploadClicked.emit();
-
-    this.isLoading = true;
-    if (this.files.length > 0) {
-      this.uploadFiles().subscribe((urls: string[]) => {
-        this.savePostOrComment(urls);
-      });
-    } else {
-      this.savePostOrComment();
     }
   }
 

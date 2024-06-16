@@ -10,12 +10,12 @@ import { defaultIfEmpty, map, switchMap } from 'rxjs/operators';
 export class PostsService {
   constructor(private afs: AngularFirestore) {}
 
-  savePost(data: Post): Promise<any> {
+  savePost(data: Post, categoryId?: string): Promise<any> {
     const body = data.body;
     const segments = body.split(/\s+/);
     const tags: string[] = [];
     const bodyWithoutTags: string[] = [];
-
+  
     segments.forEach((segment) => {
       if (this.isTag(segment)) {
         tags.push(segment.substring(1));
@@ -23,12 +23,17 @@ export class PostsService {
         bodyWithoutTags.push(segment);
       }
     });
-
+  
     data.tags = tags;
     data.body = bodyWithoutTags.join(' ');
-
+  
+    if (categoryId) {
+      data.type = categoryId;
+    }
+  
     return this.afs.collection<Post>('posts').add(data);
   }
+  
 
   private isTag(segment: string): boolean {
     return segment.startsWith('#');
@@ -150,7 +155,29 @@ export class PostsService {
       );
     }
   }
-  
+  getPostsByType(type: string): Observable<Post[]> {
+    return combineLatest([
+      this.afs.collection<Post>('posts', ref => ref.where('type', '==', type)).valueChanges({ idField: 'postId' }),
+      this.afs.collection<User>('users').valueChanges({ idField: 'userId' }),
+    ]).pipe(
+      switchMap(([posts, users]) => {
+        const postObservables = posts.map(post => {
+          const user = users.find(u => u.userId === post.userId);
+          const comments$ = this.getCommentsByPostId(post.postId);
+
+          return comments$.pipe(
+            map(comments => {
+              const commentCount = comments.length;
+              return { ...post, user, commentCount };
+            })
+          );
+        });
+        return combineLatest(postObservables).pipe(
+          defaultIfEmpty([] as Post[]) // Return an empty array if there are no posts available
+        );
+      })
+    );
+  }
   deletePost(postID: string): Promise<void> {
     return this.afs.collection('posts').doc(postID).delete();
   }

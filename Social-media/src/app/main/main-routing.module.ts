@@ -36,12 +36,13 @@ const routes: Routes = [
         path: 'reportform', component: RepotformComponent
       },
       {
-        path: 'category', component: CategoryComponent
+        path: 'category', component: CategoryComponent,pathMatch: 'full'
       },
-      {
-        path: 'categoryhome/:id', component: CategoryhomeComponent
-      }
+      { path: '', redirectTo: '/categories', pathMatch: 'full' },
+      { path: 'categories', component: CategoryComponent },
+      { path: 'categoryhome/:categoryid', component: CategoryhomeComponent }
     ]
+
   }
 ];
 

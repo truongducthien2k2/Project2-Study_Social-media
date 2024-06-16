@@ -27,7 +27,7 @@ export interface Post {
   commentCount?: number;
   documentUrls?: string[];
   tags?: string[];
-  type?: string; // Added type property for admin-created types
+  type?: string; 
 }
 export interface Category {
   id: string;

@@ -34,6 +34,7 @@ export class PostComponent implements OnInit {
     this.config.updateHeaderSettings('Tweet', true);
     const postId = this.activatedRoute.snapshot.paramMap.get('id');
     this.fetchPost(postId);
+
   }
 
   fetchPost(postId: string | null): void {

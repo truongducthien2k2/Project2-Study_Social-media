@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Post } from '../../interface';
 import { AuthService } from '../../shared/services/auth.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { PostsService } from '../../shared/services/posts.service';
 import { Observable, forkJoin } from 'rxjs';
 import { finalize, switchMap } from 'rxjs/operators';
@@ -293,6 +293,7 @@ export class PostItemsComponent implements OnInit {
   fileNames: string[] = [];
   files: File[] = [];
   showOptions: boolean = false;
+  categoryId!: string;
   constructor(
     public auth: AuthService,
     private router: Router,
@@ -301,6 +302,7 @@ export class PostItemsComponent implements OnInit {
     private notificationService: NotificationService,
     private reportService: ReportService,
     public modalService: ModelService,
+    private activatedRoute: ActivatedRoute,
   ) {}
   toggleLike(event: Event): void {
     event.stopPropagation();
@@ -342,7 +344,15 @@ export class PostItemsComponent implements OnInit {
   toggleOptions(): void {
     this.showOptions = !this.showOptions;
   }
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    const id = this.activatedRoute.snapshot.paramMap.get('categoryid');
+    if (id) {
+      this.categoryId = id;
+    } else {
+      console.error('Category ID is null');
+    }
+    console.log(this.categoryId)
+  }
 
   removeDoc(doc: string): void {
     const index = this.editableDocumentArray.indexOf(doc);
