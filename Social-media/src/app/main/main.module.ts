@@ -34,6 +34,7 @@ import { CategoryComponent } from './pages/category/category.component';
 import { CategoryhomeComponent } from './pages/categoryhome/categoryhome.component';
 import { ChartModule } from 'angular-highcharts';
 import { ChartComponent } from './components/chart/chart.component';
+import { FavouriteComponent } from './pages/favourite/favourite.component';
 @NgModule({
   declarations: [
     LayoutComponent,
@@ -64,7 +65,8 @@ import { ChartComponent } from './components/chart/chart.component';
     RepotformComponent,
     CategoryComponent,
     CategoryhomeComponent,
-    ChartComponent
+    ChartComponent,
+    FavouriteComponent
   ],
   imports: [
     CommonModule,

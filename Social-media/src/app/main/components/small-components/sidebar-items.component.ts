@@ -125,7 +125,7 @@ export class SidebarItemsComponent implements OnInit, OnDestroy {
     {
       lable: 'Category',
       route: '/category',
-      icon: 'home',
+      icon: 'category',
     },
     {
       lable: 'Notifications',

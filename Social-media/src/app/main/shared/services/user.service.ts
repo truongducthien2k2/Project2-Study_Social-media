@@ -34,7 +34,13 @@ export class UserService {
       map(following => following.length)
     )
   }
-  
+  countUsersByDateRange(startDate: Date, endDate: Date): Observable<number> {
+    return this.afs.collection<User>('users', ref =>
+      ref.where('createdAt', '>=', startDate).where('createdAt', '<=', endDate)
+    ).get().pipe(
+      map(snapshot => snapshot.size)
+    );
+  }
   checkIfFollowed(currentUserId: string, userIdToCheck: string): Observable<boolean> {
     const currentUserRef = this.afs.collection('users').doc(currentUserId);
     const following = currentUserRef.collection('following').doc(userIdToCheck);

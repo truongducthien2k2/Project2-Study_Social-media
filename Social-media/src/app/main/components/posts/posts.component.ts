@@ -56,7 +56,7 @@ export class PostsComponent implements OnInit, OnDestroy {
       );
     }
     else {
-      this.subscription = await this.postService.getPostsbyday(this.categoryId).subscribe(
+      this.subscription = await this.postService.getPostsbyday(this.userId).subscribe(
         (posts) => {
           this.posts = posts;
           this.loading = false;
