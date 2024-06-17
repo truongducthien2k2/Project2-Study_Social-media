@@ -4,6 +4,9 @@ import { Category } from '../../interface';
 import { Router } from '@angular/router';
 import { ConfigService } from '../../shared/services/config.service';
 import { ModelService } from '../../shared/services/model.service';
+import { AuthService } from '../../shared/services/auth.service';
+import { UserService } from '../../shared/services/user.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-category',
@@ -14,14 +17,20 @@ export class CategoryComponent implements OnInit {
   categories: Category[] = [];
   showModal: boolean = false;
   newCategoryName: string = '';
-
-  constructor(private modal: ModelService, private categoryService: CategoryService, private router: Router, private config: ConfigService) { }
+  isAdmin: boolean = false;
+  subscription!: Subscription;
+  constructor(private userService: UserService ,private authService: AuthService, private modal: ModelService, private categoryService: CategoryService, private router: Router, private config: ConfigService) { }
 
   ngOnInit(): void {
     this.config.updateHeaderSettings('Category');
     this.categoryService.getCategories().subscribe(categories => {
       this.categories = categories;
     });
+    if (this.authService.loggedInUserId) {
+      this.subscription = this.userService.getUser(this.authService.loggedInUserId).subscribe(user => {
+        this.isAdmin = user?.role === 'admin';
+      });
+    }
   }
 
   openAddCategoryModal(): void {

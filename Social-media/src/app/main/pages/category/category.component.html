@@ -1,19 +1,21 @@
 <div class="category-container">
-  <div *ngFor="let category of categories" class="category-item">
+  <div *ngFor="let category of categories" class="category-item flex items-center justify-between">
     <span (click)="navigateToCategoryPage(category.id)">{{ category.name }}</span>
-    <button class="delete-button" (click)="deleteCategory(category.id); $event.stopPropagation();">Delete</button>
+    <button *ngIf="isAdmin" class="delete-button text-red-600 ml-auto" (click)="deleteCategory(category.id); $event.stopPropagation();">
+      <span>&times;</span>
+    </button>
   </div>
-  <button class="add-button" (click)="openAddCategoryModal()">+</button>
+  <button class="add-button mx" (click)="openAddCategoryModal()" *ngIf="isAdmin">+</button>
 </div>
 
 <div class="modal" *ngIf="showModal">
   <div class="modal-content">
-    <span class="close" (click)="closeAddCategoryModal()">&times;</span>
+    <span class="close text-red-600" (click)="closeAddCategoryModal()">&times;</span>
     <h2>Add Category</h2>
     <input type="text" [(ngModel)]="newCategoryName" placeholder="Category Name" />
-    <div class="modal-actions">
-      <button (click)="addCategory()">Add</button>
-      <button (click)="closeAddCategoryModal()">Cancel</button>
+    <div class="modal-actions flex justify-between">
+      <button class="btn btn-primary" (click)="addCategory()">Add</button>
+      <button class="btn btn-secondary" (click)="closeAddCategoryModal()">Cancel</button>
     </div>
   </div>
 </div>

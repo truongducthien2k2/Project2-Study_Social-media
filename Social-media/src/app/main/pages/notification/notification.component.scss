@@ -26,7 +26,9 @@
     height: 4rem;
     border-radius: 9999px;
   }
-  
+  .child {
+    pointer-events: none
+ }
   .notification-item .content {
     margin-left: 1rem;
     display: flex;

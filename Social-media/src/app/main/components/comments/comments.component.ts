@@ -12,7 +12,7 @@ import { CommentService } from '../../shared/services/comment.service';
   selector: 'app-comments',
   template: `
     <div
-      class="  p-5 cursor-pointer hover:bg-neutral-900 transition"
+      class=" border-b border-gray-100 border-opacity-50 p-5 cursor-pointer hover:bg-neutral-900 transition"
       *ngFor="let comment of comments"
     >
       <div class="flex flex-row items-start gap-3">

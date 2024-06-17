@@ -289,4 +289,21 @@
         map(snapshot => snapshot.size)
       );
     }
+    getPostsByLikedUserId(userId: string): Observable<Post[]> {
+      return this.afs.collection<Post>('posts', ref =>
+        ref.where('likes', 'array-contains', userId)
+      ).valueChanges({ idField: 'postId' }).pipe(
+        switchMap(posts => {
+          return combineLatest(
+            posts.map(post => {
+              return this.afs.collection<User>('users').doc(post.userId).valueChanges().pipe(
+                map(user => ({ ...post, user }))
+              );
+            })
+          ).pipe(
+            defaultIfEmpty([] as Post[]) 
+          );
+        })
+      );
+    }
   }

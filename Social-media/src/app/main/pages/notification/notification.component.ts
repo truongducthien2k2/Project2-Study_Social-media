@@ -15,7 +15,7 @@ export class NotificationComponent implements OnInit {
   notifications: Notification[] = [];
   users: { [key: string]: User } = {};
   notificationIds: Set<string> = new Set();
-
+  activeTab: string = 'all';
   constructor(private user: UserService, private router: Router,
     private notificationService: NotificationService, private authService: AuthService, private config: ConfigService) { }
 
@@ -39,15 +39,18 @@ export class NotificationComponent implements OnInit {
   gohome(){
     this.router.navigate(['/']);
   }
-  gotouser(id: string) {
+  gotouser(id: string,notificationId: string) {
+    this.notificationService.markAsSeen(notificationId);
     this.router.navigate([`/user/${id}`]);
   }
-  gotopost(id: string) {
+  gotopost(id: string, notificationId: string) {
     if (id !== "") {
+      this.notificationService.markAsSeen(notificationId);
       this.router.navigate([`/post/${id}`]);
     }
   }
   markAsSeen(notificationId: string) {
+    console.log(1)
     this.notificationService.markAsSeen(notificationId);
   }
   deleteNotification(id: string){

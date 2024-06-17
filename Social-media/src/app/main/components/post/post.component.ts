@@ -7,12 +7,12 @@ import { NotificationService } from '../../shared/services/notification.service'
 @Component({
   selector: 'app-post',
   template: `
-   <div class="flex justify-center align-middle" *ngIf="loading">
+   <div class="flex justify-center align-middle " *ngIf="loading">
       <loader></loader>
     </div>
     <app-post-items *ngIf="post" [post]="post"></app-post-items>
     <app-form 
-      placeholder="Tweet your reply" 
+      placeholder="Write a comment" 
       [postId]="post?.postId" 
       [isComment]="true"
       (uploadClicked)="handleUploadClick()"
@@ -31,7 +31,7 @@ export class PostComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.config.updateHeaderSettings('Tweet', true);
+    this.config.updateHeaderSettings('Post', true);
     const postId = this.activatedRoute.snapshot.paramMap.get('id');
     this.fetchPost(postId);
 

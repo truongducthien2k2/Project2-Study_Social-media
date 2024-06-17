@@ -139,7 +139,7 @@ export class SidebarItemsComponent implements OnInit, OnDestroy {
     },
     {
       lable: 'Documents',
-      route: '/notifications',
+      route: '/favourite',
       icon: 'description',
     }
   ];
@@ -156,7 +156,7 @@ export class SidebarItemsComponent implements OnInit, OnDestroy {
     {
       lable: 'Admin Home',
       route: `/admin/${this.authService.loggedInUserId}`,
-      icon: 'person',
+      icon: 'assignment',
     },
   ];
 

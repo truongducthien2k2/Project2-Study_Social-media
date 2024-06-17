@@ -11,7 +11,7 @@ import { User } from '../../interface';
         <h2 class="text-white text-xl font-semibold">Who to follow?</h2>
         <div class="flex flex-col gap-6 mt-4">
           <!-- Thanh tìm kiếm -->
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-2 flex-wrap">
             <input type="text" class="bg-black text-white border border-neutral-600 px-3 py-2 rounded focus:outline-none" [(ngModel)]="searchTerm" placeholder="Search..." (input)="searchUsers()">
             <button class="bg-blue-500 text-white px-4 py-2 rounded">Search</button>
           </div>

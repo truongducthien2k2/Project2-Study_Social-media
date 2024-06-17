@@ -14,7 +14,7 @@ import { ModelService } from '../../shared/services/model.service';
   selector: 'app-post-items',
   template: `
     <div
-      class="border-0 border-neutral-600 p-5 cursor-pointer hover:bg-neutral-900 transition"
+      class="border-b border-gray-100 border-opacity-50  p-5 cursor-pointer hover:bg-neutral-900 transition"
     >
       <div class="flex flex-row items-start gap-3">
         <Avatar

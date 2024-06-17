@@ -16,7 +16,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
         'text-md px-4 py-2': !large,
         'bg-transparent border border-white': outline
       }"
-      class="disabled:opacity-70 disabled:cursor-not-allowed rounded-full font-semibold hover:opacity-80 transition border-2">
+      class="disabled:opacity-70 bg-blue-400 disabled:cursor-not-allowed rounded-full font-semibold hover:opacity-80 transition">
       {{label}}
     </button>
   `,

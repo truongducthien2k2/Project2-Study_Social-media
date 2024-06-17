@@ -10,6 +10,7 @@ import { AdminhomeComponent } from './components/adminhome/adminhome.component';
 import { RepotformComponent } from './components/repotform/repotform.component';
 import { CategoryComponent } from './pages/category/category.component';
 import { CategoryhomeComponent } from './pages/categoryhome/categoryhome.component';
+import { FavouriteComponent } from './pages/favourite/favourite.component';
 const routes: Routes = [
   {
     path: '' , component:LayoutComponent, children : [
@@ -28,6 +29,9 @@ const routes: Routes = [
       },
       {
         path: 'search', component: SearchComponent
+      },
+      {
+        path: 'favourite', component: FavouriteComponent
       },
       {
         path: 'adminhome', component: AdminhomeComponent

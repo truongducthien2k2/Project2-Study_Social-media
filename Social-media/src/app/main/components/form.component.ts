@@ -14,8 +14,8 @@ import { UserService } from '../shared/services/user.service';
   template: `
     <!-- Guest User -->
     <div class=" px-5 py-2" style="">
-      <div class="py-8" *ngIf="!auth.loggedInUserId && user">
-        <h1 class="text-white text-2xl text-center mb-4 font-bold">Welcome to Twitter</h1>
+      <div class="py-8" *ngIf="!auth.loggedInUserId && user"> 
+        <h1 class="text-white text-2xl text-center mb-4 font-bold">Welcome to Study forum</h1>
         <div class="flex flex-row items-center justify-center gap-4">
           <app-button label="Login" (click)="modalService.isLoginModelOpen = true"> </app-button>
           <app-button label="Register" [secondary]="true" (click)="modalService.isRegisterModelOpen = true"> </app-button>
@@ -24,7 +24,7 @@ import { UserService } from '../shared/services/user.service';
     </div>
 
     <!-- Logged In User -->
-    <div class="flex flex-row gap-4" *ngIf="auth.loggedInUserId">
+    <div class="flex flex-row gap-4 mx-4 my-4 " *ngIf="auth.loggedInUserId">
     <Avatar *ngIf="user" [photoURL]="user.photoURL"></Avatar>
       <div class="w-full">
         <textarea [disabled]="isLoading"

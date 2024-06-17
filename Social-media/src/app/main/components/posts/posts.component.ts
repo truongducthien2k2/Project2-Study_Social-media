@@ -7,11 +7,14 @@ import { PostsService } from '../../shared/services/posts.service';
 @Component({
   selector: 'app-posts',
   template: `
-    <div class="flex justify-center align-middle" *ngIf="loading">
+    <div class="flex justify-center align-middle border-t border-gray-100 border-opacity-50" *ngIf="loading">
       <loader></loader>
     </div>
-    <ng-container *ngFor="let post of posts">
-      <app-post-items *ngIf="post" [post]="post"> </app-post-items>
+    <ng-container  *ngFor="let post of posts">
+      <div class="border-t border-gray-100 border-opacity-20">
+      <app-post-items  *ngIf="post" [post]="post"> </app-post-items>
+      </div>
+    
     </ng-container>
   `,
   styles: [],
