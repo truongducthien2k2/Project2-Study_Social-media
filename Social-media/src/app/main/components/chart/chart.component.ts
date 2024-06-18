@@ -13,18 +13,20 @@ export class ChartComponent implements OnInit {
   users = this.userService.getAllUsers();
   postCounts: number[] = [];
   userCounts: number[] = [];
-  chart!: Chart;
+  postChart!: Chart;
+  userChart!: Chart;
 
   constructor(private userService: UserService, private postsService: PostsService) { }
 
   ngOnInit(): void {
-    this.initializeChart();
+    this.initializePostChart();
+    this.initializeUserChart();
     this.loadPostCounts();
     this.loadUserCounts();
   }
 
-  initializeChart(): void {
-    this.chart = new Chart({
+  initializePostChart(): void {
+    this.postChart = new Chart({
       legend: {
         itemStyle: {
           color: 'white'
@@ -36,7 +38,7 @@ export class ChartComponent implements OnInit {
         backgroundColor: "#000000"
       },
       title: {
-        text: 'Report',
+        text: 'Posts Report',
         style: { color: "#ffffff" }
       },
       colorAxis: {
@@ -49,9 +51,9 @@ export class ChartComponent implements OnInit {
         lineColor: '#ffffff',
         lineWidth: 3,
         categories: [
-          'This Month',
+          'Last 2 Months',
           'Last Month',
-          'Last 2 Months'
+          'This Month'
         ]
       },
       yAxis: {
@@ -72,9 +74,59 @@ export class ChartComponent implements OnInit {
           color: '#02f737',
           data: [0, 0, 0],  // Initial dummy data
           dashStyle: 'Dash' 
+        }
+      ],
+      credits: {
+        enabled: false
+      }
+    });
+  }
+
+  initializeUserChart(): void {
+    this.userChart = new Chart({
+      legend: {
+        itemStyle: {
+          color: 'white'
+        }
+      },
+      chart: {
+        type: 'line',
+        height: 325,
+        backgroundColor: "#000000"
+      },
+      title: {
+        text: 'User Account Creation Report',
+        style: { color: "#ffffff" }
+      },
+      colorAxis: {
+        gridLineColor: "ffffff",
+      },
+      xAxis: {
+        labels: {
+          style: { color: 'white' }
         },
+        lineColor: '#ffffff',
+        lineWidth: 3,
+        categories: [
+          'Last 2 Months',
+          'Last Month',
+          'This Month'
+        ]
+      },
+      yAxis: {
+        labels: {
+          style: { color: 'white' }
+        },
+        lineColor: '#ffffff',
+        lineWidth: 3,
+        title: {
+          text: 'Amount',
+          style: { color: "#ffffff" }
+        }
+      },
+      series: [
         {
-          name: "Toltal acount Create",
+          name: "Total Account Created",
           type: "line",
           color: '#ff0000',
           data: [0, 0, 0]
@@ -95,15 +147,16 @@ export class ChartComponent implements OnInit {
     const endOfTwoMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 1, 0);
 
     forkJoin([
-      this.postsService.countPostsByDateRange(startOfThisMonth, now),
+      this.postsService.countPostsByDateRange(startOfTwoMonthsAgo, endOfTwoMonthsAgo),
       this.postsService.countPostsByDateRange(startOfLastMonth, endOfLastMonth),
-      this.postsService.countPostsByDateRange(startOfTwoMonthsAgo, endOfTwoMonthsAgo)
+      this.postsService.countPostsByDateRange(startOfThisMonth, now)
     ]).subscribe(counts => {
       this.postCounts = counts;
       console.log('Post Counts:', this.postCounts);
-      this.updateChartData();
+      this.updatePostChartData();
     });
   }
+
   loadUserCounts(): void {
     const now = new Date();
     const startOfThisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -113,9 +166,9 @@ export class ChartComponent implements OnInit {
     const endOfTwoMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 1, 0);
 
     forkJoin([
-      this.userService.countUsersByDateRange(startOfThisMonth, now),
+      this.userService.countUsersByDateRange(startOfTwoMonthsAgo, endOfTwoMonthsAgo),
       this.userService.countUsersByDateRange(startOfLastMonth, endOfLastMonth),
-      this.userService.countUsersByDateRange(startOfTwoMonthsAgo, endOfTwoMonthsAgo)
+      this.userService.countUsersByDateRange(startOfThisMonth, now)
     ]).subscribe(counts => {
       this.userCounts = counts;
       console.log('User Counts:', this.userCounts);
@@ -123,14 +176,15 @@ export class ChartComponent implements OnInit {
     });
   }
 
-  updateChartData(): void {
-    this.chart.ref$.subscribe(chart => {
+  updatePostChartData(): void {
+    this.postChart.ref$.subscribe(chart => {
       chart.series[0].setData(this.postCounts, true);
     });
   }
+
   updateUserChartData(): void {
-    this.chart.ref$.subscribe(chart => {
-      chart.series[1].setData(this.userCounts, true);
+    this.userChart.ref$.subscribe(chart => {
+      chart.series[0].setData(this.userCounts, true);
     });
   }
 }

@@ -5,9 +5,8 @@
             <div class="flex flex-col items-center gap-4">
                 <div *ngFor="let follower of followers"
                     class="w-full flex items-center bg-gray-900 p-4 rounded-lg mb-2">
-                    <img [src]="follower.photoURL" alt="Profile Picture" width="70" height="70">
-
-                    <div class="ml-4">
+                    <img [src]="follower.photoURL" alt="Profile Picture" width="70" height="70" (click)="gotouser(follower.uid)">
+                    <div class="ml-4" (click)="gotouser(follower.uid)">
                         <p class="text-white text-lg font-semibold">{{ follower.displayName }}</p>
                         <p class="text-gray-400">{{ follower.email }}</p>
                     </div>

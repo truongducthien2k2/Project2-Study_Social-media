@@ -7,6 +7,7 @@ import { AngularFireStorage } from '@angular/fire/storage';
 import { finalize } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { ConfigService } from '../../shared/services/config.service';
+import { Router } from '@angular/router'; // Import the Router service
 
 @Component({
   selector: 'app-follow-user',
@@ -21,11 +22,13 @@ export class FollowUserComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
   followers: User[] = [];
   followings: User[] = [];
+  
   constructor(
     public modalService: ModelService,
     private fb: FormBuilder,
     public userService: UserService,
-    private storage: AngularFireStorage
+    private storage: AngularFireStorage,
+    private router: Router // Inject the Router service
   ) {
     this.editProfile = this.fb.group({
       name: ['', Validators.required],
@@ -55,7 +58,6 @@ export class FollowUserComponent implements OnInit, OnDestroy {
       this.subscriptions.push(sub);
     });
   }
-  
 
   // Hàm để trả về các classes CSS dựa trên trạng thái của người dùng
   getInputClasses(fieldName: string, followId: string): any {
@@ -81,5 +83,9 @@ export class FollowUserComponent implements OnInit, OnDestroy {
       'disabled:opacity-70': true,
       'disabled:cursor-not-allowed': true,
     };
+  }
+
+  gotouser(id: string) {
+    this.router.navigate([`/user/${id}`]); 
   }
 }

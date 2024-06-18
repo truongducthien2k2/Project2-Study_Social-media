@@ -19,7 +19,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   followingCount: number = 0;
   followersCount: number = 0;
   user!: User;
-  currentUserId: string = '';
+  public currentUserId: string = '';
   loading: boolean = false;
   isAdmin: boolean = false;
   adminrole: boolean = false;

@@ -1,4 +1,4 @@
-<div class="bg-gey h-44 relative" *ngIf="user">
+<div class="bg-gey h-24 relative" *ngIf="user">
   <div class="absolute -bottom-16 left-4">
     <Avatar [photoURL]="user.photoURL" [isLarge]="true" [hasBorder]="true"></Avatar>
   </div>
@@ -8,12 +8,12 @@
 <div class="pb-4" *ngIf="user">
   <div class="flex justify-end p-2 items-center gap-2">
     <span class="material-icons cursor-pointer text-white" (click)="reportUser()">report</span>
-    <ng-container >
-      <app-button (click)="ban()" *ngIf="adminrole && !isBan" label="Ban">Ban</app-button>
-      <app-button (click)="unBan()" *ngIf="adminrole && isBan" label="UnBan">Un Ban</app-button>
+    <ng-container *ngIf="auth.loggedInUserId !== currentUserId">
+      <app-button (click)="ban()" *ngIf="adminrole && !isBan" label="Ban" [isBanButton]="true">Ban</app-button>
+      <app-button (click)="unBan()" *ngIf="adminrole && isBan" label="UnBan" [isBanButton]="true">Un Ban</app-button>
     </ng-container>
     <app-button (click)="toggleFollow()" *ngIf="!isAdmin" [label]="isFollowed ? 'Unfollow' : 'Follow'"></app-button>
-    <app-button (click)="edit()" *ngIf="isAdmin" label="Edit Profile" [secondary]="true"></app-button>
+    <app-button (click)="edit()" *ngIf="isAdmin" label="Edit Profile" [secondary]="false"></app-button>
   </div>
   <div class="mt-8 px-4">
     <div class="flex flex-col">

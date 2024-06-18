@@ -55,5 +55,6 @@ export class NotificationComponent implements OnInit {
   }
   deleteNotification(id: string){
     this.notificationService.deleteNotification(id);
+    window.location.reload();
   }
 }

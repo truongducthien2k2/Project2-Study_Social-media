@@ -186,7 +186,7 @@
     getPostsByTags(tags: string[]): Observable<Post[]> {
       return combineLatest([
         this.afs.collection<Post>('posts', ref => 
-          ref.where('tags', 'array-contains-any', tags)
+          ref.where('tags', 'array-contains-any', tags).orderBy('createdAt', 'desc')
         ).valueChanges({ idField: 'postId' }),
         this.afs.collection<User>('users').valueChanges({ idField: 'userId' }),
       ]).pipe(
@@ -197,7 +197,7 @@
           const postObservables = filteredPosts.map(post => {
             const user = users.find(u => u.userId === post.userId);
             const comments$ = this.getCommentsByPostId(post.postId);
-
+    
             return comments$.pipe(
               map(comments => {
                 const commentCount = comments.length;
