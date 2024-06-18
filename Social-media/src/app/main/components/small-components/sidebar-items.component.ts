@@ -138,9 +138,9 @@ export class SidebarItemsComponent implements OnInit, OnDestroy {
       icon: 'search',
     },
     {
-      lable: 'Documents',
+      lable: 'Favourite',
       route: '/favourite',
-      icon: 'description',
+      icon: 'favorite',
     }
   ];
 

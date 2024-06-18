@@ -50,11 +50,10 @@ export class NotificationComponent implements OnInit {
     }
   }
   markAsSeen(notificationId: string) {
-    console.log(1)
     this.notificationService.markAsSeen(notificationId);
   }
-  deleteNotification(id: string){
-    this.notificationService.deleteNotification(id);
+  async deleteNotification(id: string){
+    await this.notificationService.deleteNotification(id);
     window.location.reload();
   }
 }
