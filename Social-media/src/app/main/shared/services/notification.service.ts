@@ -27,7 +27,6 @@ export class NotificationService {
   
 
   markAsSeen(notificationId: string): Promise<void> {
-    console.log(2)
     return this.afs.collection('notifications').doc(notificationId).update({ seen: true });
   }
    createLikeNotification(postId: string, userIdTo: string, userIdFrom: string): Promise<void> {
