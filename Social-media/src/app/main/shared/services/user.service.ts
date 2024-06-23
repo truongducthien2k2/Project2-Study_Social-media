@@ -73,7 +73,7 @@ export class UserService {
 
     const batch = this.afs.firestore.batch();
     batch.delete(following.ref)
-    batch.delete(followers.ref)
+    batch.delete(followers.ref) 
 
     return batch.commit();
   }
